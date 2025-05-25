@@ -7,10 +7,18 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Gdk", "4.0")
 from gi.repository import Gtk, GdkPixbuf, Gdk
 
+from utils.path import utils_path_get_asset
+
+from utils.log import utils_log_get_logger
+LOG_INFO  = utils_log_get_logger("map_view")["info"]
+LOG_DEBUG = utils_log_get_logger("map_view")["debug"]
+LOG_WARN  = utils_log_get_logger("map_view")["warn"]
+LOG_ERR   = utils_log_get_logger("map_view")["err"]
+
 TILE_SIZE = 256
 ZOOM = 16
 
-class MapArea(Gtk.DrawingArea):
+class MapView(Gtk.DrawingArea):
     def __init__(self):
         super().__init__()
         self.set_draw_func(self.on_draw)
@@ -21,8 +29,9 @@ class MapArea(Gtk.DrawingArea):
         self.offset_y = 0
         self.tiles = {}
         self.zoom = ZOOM  # Initial zoom level
-
-        self.marker_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size("marker.png", 24, 24)
+        
+        marker_path = utils_path_get_asset("map", "marker.png")
+        self.marker_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(marker_path, 24, 24)
 
         # For storing clicked point
         self.clicked_latlon = None
@@ -39,7 +48,7 @@ class MapArea(Gtk.DrawingArea):
         self.drag.connect("drag-update", self.on_drag_update)
         self.drag.connect("drag-end", self.on_drag_end)
         
-        # Attach the drag gesture controller to the MapArea widget
+        # Attach the drag gesture controller to the MapView widget
         self.add_controller(self.drag)
     
     def on_map_clicked(self, gesture, n_press, x, y):
@@ -64,14 +73,14 @@ class MapArea(Gtk.DrawingArea):
         lat, lon = self.num2deg(clicked_xtile, clicked_ytile, self.zoom)
         self.clicked_latlon = (lat, lon)
 
-        print(f"Clicked at pixel ({x}, {y}) => Coordinates: ({lat:.6f}, {lon:.6f})")
+        LOG_DEBUG(f"Clicked at pixel ({x}, {y}) => Coordinates: ({lat:.6f}, {lon:.6f})")
         self.queue_draw()
 
     # Add a setter for zoom level
     def set_zoom(self, zoom):
         self.zoom = zoom
         self.queue_draw()  # Redraw the map when zoom changes
-        print(f"Zoom level updated to: {self.zoom}")
+        LOG_DEBUG(f"Zoom level updated to: {self.zoom}")
 
     def deg2num(self, lat_deg, lon_deg, zoom):
         lat_rad = math.radians(lat_deg)
@@ -90,28 +99,30 @@ class MapArea(Gtk.DrawingArea):
     def download_tile(self, x, y, zoom):
         if x < 0 or y < 0 or x >= 2 ** zoom or y >= 2 ** zoom:
             return None
+        LOG_DEBUG(f"Downloading tile at {x}, {y} for zoom {zoom}")
 
-        path = f"tiles/{zoom}/{int(x)}/{int(y)}.png"
-        if not os.path.exists(path):
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+        tile_name = os.path.join(str(zoom), str(int(x)), f"{int(y)}.png")
+        tile_path = utils_path_get_asset("tiles", tile_name)
+        if not os.path.exists(tile_path):
+            os.makedirs(os.path.dirname(tile_path), exist_ok=True)
             url = f"https://tile.openstreetmap.org/{zoom}/{int(x)}/{int(y)}.png"
             headers = {
                 "User-Agent": "MyGTKMapViewer/1.0 (ntkhuong.coder@gmail.com)"
             }
             req = urllib.request.Request(url, headers=headers)
             try:
-                with urllib.request.urlopen(req) as response, open(path, 'wb') as out_file:
+                with urllib.request.urlopen(req) as response, open(tile_path, 'wb') as out_file:
                     out_file.write(response.read())
-                print(f"Tile downloaded: {path}")  # Debugging: Tile downloaded
+                LOG_DEBUG(f"Tile downloaded: {tile_path}")
             except Exception as e:
-                print(f"Failed to download tile {x},{y}: {e}")
+                LOG_ERR(f"Failed to download tile {x},{y}: {e}")
                 return None
         else:
-            print(f"Tile found in cache: {path}")  # Debugging: Tile exists in cache
-        return path
+            LOG_DEBUG(f"Tile found in cache: {tile_path}")
+        return tile_path
 
     def on_draw(self, area, ctx, width, height):
-        print("on_draw called")
+        LOG_DEBUG(f"Drawing area size: {width}x{height}")
 
         center_x, center_y = self.deg2num(self.center_lat, self.center_lon, ZOOM)
 
@@ -124,8 +135,8 @@ class MapArea(Gtk.DrawingArea):
         offset_x = -((center_x - int(center_x)) * TILE_SIZE) + self.offset_x
         offset_y = -((center_y - int(center_y)) * TILE_SIZE) + self.offset_y
 
-        print(f"Start X: {start_x}, Start Y: {start_y}")
-        print(f"Offset X: {offset_x}, Offset Y: {offset_y}")
+        LOG_DEBUG(f"Offset X: {offset_x}, Offset Y: {offset_y}")
+        LOG_DEBUG(f"Drawing tiles from {start_x}, {start_y} with size {tiles_x}x{tiles_y}")
 
         for i in range(tiles_x):
             for j in range(tiles_y):
@@ -137,7 +148,7 @@ class MapArea(Gtk.DrawingArea):
                         key = f"{ZOOM}/{x}/{y}"
                         if key not in self.tiles:
                             self.tiles[key] = GdkPixbuf.Pixbuf.new_from_file(tile_path)
-                            print(f"Tile loaded: {tile_path}")
+                            LOG_DEBUG(f"Tile loaded: {tile_path}")
                         pixbuf = self.tiles[key]
 
                         # Round the drawing positions to integers
@@ -145,15 +156,15 @@ class MapArea(Gtk.DrawingArea):
                         draw_y = round(j * TILE_SIZE + offset_y)
 
                         # Debugging: Check the tile positions
-                        print(f"Drawing tile at {draw_x}, {draw_y}")
+                        LOG_DEBUG(f"Drawing tile at {draw_x}, {draw_y} for {x},{y} at zoom {ZOOM}")
 
                         # Drawing the tile
                         Gdk.cairo_set_source_pixbuf(ctx, pixbuf, draw_x, draw_y)
                         ctx.paint()  # Ensure it paints the pixbuf
                     except Exception as e:
-                        print(f"Error loading tile {tile_path}: {e}")
+                        LOG_ERR(f"Error loading tile {tile_path}: {e}")
                 else:
-                    print(f"Tile not found for {x},{y} at zoom {ZOOM}")
+                    LOG_DEBUG(f"Tile not found for {x},{y} at zoom {ZOOM}")
 
         # Calculate pixel position of center marker
         center_xtile, center_ytile = self.deg2num(self.center_lat, self.center_lon, self.zoom)
@@ -210,61 +221,3 @@ class MapArea(Gtk.DrawingArea):
         self.offset_x = 0
         self.offset_y = 0
         self.queue_draw()
-
-
-class MapWindow(Gtk.ApplicationWindow):
-    def __init__(self, app):
-        super().__init__(application=app)
-        self.set_title("Map Viewer with Drag and Zoom")
-        self.set_default_size(800, 600)
-
-        map_area = MapArea()
-
-        # Create zoom buttons
-        zoom_in_button = Gtk.Button(label="Zoom In")
-        zoom_in_button.connect("clicked", self.on_zoom_in_clicked, map_area)
-        zoom_out_button = Gtk.Button(label="Zoom Out")
-        zoom_out_button.connect("clicked", self.on_zoom_out_clicked, map_area)
-
-        # Create a box to hold the buttons and the map area
-        button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        button_box.append(zoom_in_button)
-        button_box.append(zoom_out_button)
-
-        # Create a vertical box to stack the button box and map area
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        main_box.append(button_box)
-
-        # Let map_area expand to fill available space
-        map_area.set_vexpand(True)
-        map_area.set_hexpand(True)
-        main_box.append(map_area)
-
-        self.set_child(main_box)  # Set the main_box as the only child
-
-    def on_zoom_in_clicked(self, button, map_area):
-        global ZOOM
-        ZOOM += 1
-        map_area.set_zoom(ZOOM)  # Update zoom level in MapArea
-        print(f"Zooming in: New Zoom Level = {ZOOM}")  # Debugging: Zoom level
-
-    def on_zoom_out_clicked(self, button, map_area):
-        global ZOOM
-        ZOOM -= 1
-        map_area.set_zoom(ZOOM)  # Update zoom level in MapArea
-        print(f"Zooming out: New Zoom Level = {ZOOM}")  # Debugging: Zoom level
-
-
-
-class MapApplication(Gtk.Application):
-    def __init__(self):
-        super().__init__(application_id="com.example.GTKMapPan")
-
-    def do_activate(self):
-        win = MapWindow(self)
-        win.present()
-
-
-if __name__ == "__main__":
-    app = MapApplication()
-    app.run()
