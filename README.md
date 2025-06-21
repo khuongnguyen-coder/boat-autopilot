@@ -57,34 +57,36 @@ MIT License
 © 2025 VNEST — All rights reserved.
 
 # 📁 Directory Layout
-<project_root>
-    ├── app.py
-    ├── autorun.sh
-    ├── main.py
-    ├── README.md
-    ├── resources.gresource
-    ├── resources.xml
-    ├── scripts
-    │   ├── clear_pycache.sh
-    │   ├── normalize_paths.sh
-    │   └── update_resources.sh
-    ├── ui
-    │   ├── assets
-    │   │   ├── icons
-    │   │   │   └── *.png
-    │   │   ├── info
-    │   │   │   └── *.png
-    │   │   ├── map
-    │   │   │   └── *.png
-    │   │   └── tiles
-    │   │   │   └── *.png
-    │   ├── css
-    │   │   └── style.css
-    │   └── main.glade
-    ├── utils
-    │   ├── log.py
-    │   └── path.py
-    └── views
-        ├── camera_view.py
-        ├── main_view.py
-        └── map_view.py
+<pre> ```text 
+    project_root
+        ├── app.py
+        ├── autorun.sh
+        ├── main.py
+        ├── README.md
+        ├── resources.gresource
+        ├── resources.xml
+        ├── scripts
+        │   ├── clear_pycache.sh
+        │   ├── normalize_paths.sh
+        │   └── update_resources.sh
+        ├── ui
+        │   ├── assets
+        │   │   ├── icons
+        │   │   │   └── *.png
+        │   │   ├── info
+        │   │   │   └── *.png
+        │   │   ├── map
+        │   │   │   └── *.png
+        │   │   └── tiles
+        │   │   │   └── *.png
+        │   ├── css
+        │   │   └── style.css
+        │   └── main.glade
+        ├── utils
+        │   ├── log.py
+        │   └── path.py
+        └── views
+            ├── camera_view.py
+            ├── main_view.py
+            └── map_view.py
+``` </pre>
