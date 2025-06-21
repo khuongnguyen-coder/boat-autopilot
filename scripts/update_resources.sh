@@ -7,6 +7,7 @@ RESOURCE_XML="$1"
 RESOURCE_FILE="resources.gresource"
 ICON_DIR="ui/assets/icons"
 MAP_DIR="ui/assets/map"
+CSS_DIR="ui/css"
 GLADE_FILE="ui/main.glade"
 
 ASSETS_PREFIX="/vn/vnest/autopilot"
@@ -41,6 +42,7 @@ make_file_entries() {
 
 ICON_FILES=$(make_file_entries "$ICON_DIR")
 MAP_FILES=$(make_file_entries "$MAP_DIR")
+CSS_FILES=$(make_file_entries "$CSS_DIR")
 
 # ✅ Check UI file
 if [[ ! -f "$GLADE_FILE" ]]; then
@@ -55,6 +57,7 @@ cat > "$RESOURCE_XML" <<EOF
   <gresource prefix="$ASSETS_PREFIX">
 $ICON_FILES
 $MAP_FILES
+$CSS_FILES
   </gresource>
 
   <gresource prefix="$DESIGN_PREFIX">

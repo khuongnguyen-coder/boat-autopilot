@@ -9,6 +9,7 @@
     <file>ui/assets/icons/tab_settings_48.png</file>
     <file>ui/assets/icons/tab_wheel_48.png</file>
     <file>ui/assets/map/marker.png</file>
+    <file>ui/css/style.css</file>
   </gresource>
 
   <gresource prefix="/vn/vnest/autopilot">

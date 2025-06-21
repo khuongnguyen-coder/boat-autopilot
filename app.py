@@ -1,7 +1,15 @@
 import gi
 gi.require_version("Gtk", "3.0")
 
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gdk, Gio
+
+from views.main_view import MainView
+
+from utils.log import utils_log_get_logger
+LOG_INFO  = utils_log_get_logger("main")["info"]
+LOG_DEBUG = utils_log_get_logger("main")["debug"]
+LOG_WARN  = utils_log_get_logger("main")["warn"]
+LOG_ERR   = utils_log_get_logger("main")["err"]
 
 class VnestAutopilot(Gtk.Application):
     def __init__(self):
@@ -15,16 +23,17 @@ class VnestAutopilot(Gtk.Application):
             resource = Gio.Resource.load("resources.gresource")
             Gio.resources_register(resource)
         except Exception as e:
-            print(f"Failed to load resources.gresource: {e}")
+            LOG_ERR(f"Failed to load resources.gresource: {e}")
+
+        # ✅ Load CSS from resource
+        css = Gtk.CssProvider()
+        css.load_from_resource("/vn/vnest/autopilot/ui/css/style.css")
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            css,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
     def do_activate(self):
-        # ✅ Correct GResource path (must start with /, no .glade relative path)
-        builder = Gtk.Builder()
-        builder.add_from_resource("/vn/vnest/autopilot/ui/main.glade")
-
-        window = builder.get_object("main_window")
-        window.set_title("Vnest Autopilot")
-        window.set_application(self)
-        window.show_all()      # GTK 3 requires show_all()
-        window.present()
-        window.maximize()
+        main_view = MainView(self)         # Instantiate the MainView
+        main_view.window.present()

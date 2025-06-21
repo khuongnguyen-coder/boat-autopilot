@@ -86,33 +86,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkNotebook">
+          <object class="GtkNotebook" id="main_notebook">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tab-pos">right</property>
             <child>
-              <!-- n-columns=3 n-rows=3 -->
-              <object class="GtkGrid">
+              <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
+                <property name="orientation">vertical</property>
                 <child>
                   <placeholder/>
                 </child>
@@ -128,6 +110,8 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">8</property>
                 <property name="spacing">16</property>
                 <child>
                   <object class="GtkImage">
@@ -164,34 +148,16 @@
               </packing>
             </child>
             <child>
-              <!-- n-columns=3 n-rows=3 -->
-              <object class="GtkGrid">
+              <object class="GtkBox" id="window_box_map">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
+                <property name="margin-start">8</property>
+                <property name="margin-end">8</property>
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">8</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <placeholder/>
                 </child>
@@ -204,6 +170,8 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">8</property>
                 <property name="spacing">16</property>
                 <child>
                   <object class="GtkImage">
@@ -241,34 +209,17 @@
               </packing>
             </child>
             <child>
-              <!-- n-columns=3 n-rows=3 -->
-              <object class="GtkGrid">
+              <object class="GtkBox" id="window_box_camera">
+                <property name="name">black_colord_box</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
+                <property name="margin-start">8</property>
+                <property name="margin-end">8</property>
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">8</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <placeholder/>
                 </child>
@@ -281,6 +232,8 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">8</property>
                 <property name="spacing">16</property>
                 <child>
                   <object class="GtkImage">
@@ -358,6 +311,8 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">8</property>
                 <property name="spacing">16</property>
                 <child>
                   <object class="GtkImage">
@@ -435,6 +390,8 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">8</property>
                 <property name="spacing">16</property>
                 <child>
                   <object class="GtkImage">
