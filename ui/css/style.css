@@ -7,3 +7,17 @@
 #red_colord_box {
   background-color: #ff3300;
 }
+
+button.zoom-button,
+button.zoom-button:active,
+button.zoom-button:hover {
+  border: none;
+  box-shadow: none;
+}
+
+button.map-button {
+  background-color: rgba(248, 255, 200, 0.5); /* F8FFC8 with 50% opacity */
+  color: black; /* or any text/icon color you prefer */
+  border: none;
+  box-shadow: none;
+}

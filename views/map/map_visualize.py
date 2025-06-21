@@ -20,6 +20,9 @@ LOG_ERR   = utils_log_get_logger("map_view")["err"]
 TILE_SIZE = 256
 ZOOM = 16
 
+MY_LOCATION_LAT = 10.8382543
+MY_LOCATION_LON = 106.8317088
+
 class MapVisualize(Gtk.DrawingArea):
     def __init__(self):
         super().__init__()
@@ -47,8 +50,8 @@ class MapVisualize(Gtk.DrawingArea):
 
         # self.set_size_request(800, 600)
 
-        self.center_lat = 10.8382543
-        self.center_lon = 106.8317088
+        self.center_lat = MY_LOCATION_LAT
+        self.center_lon = MY_LOCATION_LON
         self.zoom = ZOOM
         self.offset_x = 0
         self.offset_y = 0
@@ -233,6 +236,17 @@ class MapVisualize(Gtk.DrawingArea):
             self.tiles.clear()
             self.queue_draw()
             LOG_DEBUG(f"Zoom set to {self.zoom}")
+
+    def go_my_location(self):
+        # Set to a default location (e.g., Ho Chi Minh City)
+        self.center_lat = MY_LOCATION_LAT
+        self.center_lon = MY_LOCATION_LON
+        self.offset_x = 0
+        self.offset_y = 0
+        self.zoom = ZOOM
+        self.tiles.clear()
+        self.queue_draw()
+        LOG_DEBUG(f"🗺️ Centered map at my location: ({self.center_lat}, {self.center_lon})")
 
     def stop(self):
         LOG_DEBUG(f"🛑 Map view stopped.")
