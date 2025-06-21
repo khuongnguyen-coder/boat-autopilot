@@ -57,7 +57,7 @@ MIT License
 © 2025 VNEST — All rights reserved.
 
 # 📁 Directory Layout
-<pre> ```text 
+<pre>
     project_root
         ├── app.py
         ├── autorun.sh
@@ -89,4 +89,4 @@ MIT License
             ├── camera_view.py
             ├── main_view.py
             └── map_view.py
-``` </pre>
+</pre>
