@@ -1,0 +1,17 @@
+<gresources>
+  <gresource prefix="/vn/vnest/autopilot">
+    <file>ui/assets/icons/logo_ship_30.png</file>
+    <file>ui/assets/icons/logo_ship_40.png</file>
+    <file>ui/assets/icons/logo_ship_50.png</file>
+    <file>ui/assets/icons/tab_camera_48.png</file>
+    <file>ui/assets/icons/tab_map_48.png</file>
+    <file>ui/assets/icons/tab_notification_48.png</file>
+    <file>ui/assets/icons/tab_settings_48.png</file>
+    <file>ui/assets/icons/tab_wheel_48.png</file>
+    <file>ui/assets/map/marker.png</file>
+  </gresource>
+
+  <gresource prefix="/vn/vnest/autopilot">
+    <file>ui/main.glade</file>
+  </gresource>
+</gresources>

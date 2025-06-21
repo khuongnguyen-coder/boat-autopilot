@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Normalize Glade Paths",
+      "type": "shell",
+      "command": "./scripts/normalize_paths.sh ui/main.glade",
+      "problemMatcher": []
+    },
+    {
+      "label": "Update GResource",
+      "type": "shell",
+      "command": "./scripts/update_resources.sh resources.xml",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build UI Resources",
+      "type": "shell",
+      "command": "gresource list resources.gresource",
+      "problemMatcher": [],
+      "dependsOn": ["Normalize Glade Paths", "Update GResource"]
+    }
+  ]
+}
