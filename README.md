@@ -57,7 +57,6 @@ MIT License
 © 2025 VNEST — All rights reserved.
 
 # 📁 Directory Layout
-
 <project_root>
     ├── app.py
     ├── autorun.sh
@@ -66,21 +65,25 @@ MIT License
     ├── resources.gresource
     ├── resources.xml
     ├── scripts
-    │   ├── clear_pycache.sh
-    │   ├── normalize_paths.sh
-    │   └── update_resources.sh
+    │   ├── clear_pycache.sh
+    │   ├── normalize_paths.sh
+    │   └── update_resources.sh
     ├── ui
-    │   ├── assets
-    │   │   ├── icons
-    │   │   ├── info
-    │   │   ├── map
-    │   │   └── tiles
-    │   ├── css
-    │   │   └── style.css
-    │   ├── main.glade
+    │   ├── assets
+    │   │   ├── icons
+    │   │   │   └── *.png
+    │   │   ├── info
+    │   │   │   └── *.png
+    │   │   ├── map
+    │   │   │   └── *.png
+    │   │   └── tiles
+    │   │   │   └── *.png
+    │   ├── css
+    │   │   └── style.css
+    │   └── main.glade
     ├── utils
-    │   ├── log.py
-    │   └── path.py
+    │   ├── log.py
+    │   └── path.py
     └── views
         ├── camera_view.py
         ├── main_view.py
