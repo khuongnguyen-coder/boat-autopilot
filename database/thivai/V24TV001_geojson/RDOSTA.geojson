@@ -1,0 +1,287 @@
+{
+  "type": "FeatureCollection",
+  "name": "RDOSTA",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 697,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046474,
+        "FIDS": 186,
+        "LNAM": "05E8633E97CA00BA",
+        "CALSGN": "995741001",
+        "COMCHA": "156-162.5 MHz",
+        "INFORM": "Notice: 312, 30/12/2022"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0328055,
+          10.4011111
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 698,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046474,
+        "FIDS": 187,
+        "LNAM": "05E8633E97CA00BB",
+        "CALSGN": "995741013",
+        "COMCHA": "161.975 Mhz - 162.025 Mhz",
+        "OBJNAM": "BUOY 11 VTTV",
+        "INFORM": "Notice: 220, 02/11/2018"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0354722,
+          10.4128334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 699,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046474,
+        "FIDS": 188,
+        "LNAM": "05E8633E97CA00BC",
+        "CALSGN": "995741012",
+        "COMCHA": "161.975 Mhz - 162.025 Mhz",
+        "OBJNAM": "BUOY 9 VTTV",
+        "INFORM": "Notice: 220, 02/11/2018"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0429759,
+          10.3826257
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 700,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046474,
+        "FIDS": 189,
+        "LNAM": "05E8633E97CA00BD",
+        "CALSGN": "995741011",
+        "COMCHA": "156 - 162.5 Mhz",
+        "OBJNAM": "BUOY 5 VTTV",
+        "INFORM": "Notice: 312, 30/12/2022"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0558967,
+          10.3295391
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 754,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046474,
+        "FIDS": 243,
+        "LNAM": "05E8633E97CA00F3",
+        "CALSGN": "995741002",
+        "COMCHA": "156-162.5MHz",
+        "SORDAT": "20191119"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0840688,
+          10.2824322
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 766,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046474,
+        "FIDS": 255,
+        "LNAM": "05E8633E97CA00FF",
+        "CALSGN": "995741027",
+        "COMCHA": "161.975 MHz - 162.025 MHz",
+        "DATSTA": "20200328",
+        "ESTRNG": 5,
+        "OBJNAM": "BUOY HQ V2",
+        "INFORM": "Notice 43, 28/3/2020",
+        "SORDAT": "202003"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0248389,
+          10.4288834
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 889,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 123,
+        "LNAM": "05E8633E97CB007B",
+        "CALSGN": "995741032",
+        "COMCHA": "161.975 Mhz - 162.025 Mhz",
+        "OBJNAM": "BUOY P1",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0399354,
+          10.4053212
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 890,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 124,
+        "LNAM": "05E8633E97CB007C",
+        "CALSGN": "995741033",
+        "COMCHA": "161.975 Mhz - 162.025 Mhz",
+        "OBJNAM": "BUOY P2",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0378216,
+          10.4142264
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 891,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 125,
+        "LNAM": "05E8633E97CB007D",
+        "CALSGN": "995741034",
+        "COMCHA": "161.975 Mhz - 162.025 Mhz",
+        "OBJNAM": "BUOY P7",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0430802,
+          10.4247457
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 892,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 126,
+        "LNAM": "05E8633E97CB007E",
+        "CALSGN": "995741035",
+        "COMCHA": "161.975 Mhz - 162.025 Mhz",
+        "OBJNAM": "BEACON L2",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0404243,
+          10.432319
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1084,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 105,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1672817742,
+        "FIDS": 1,
+        "LNAM": "05E863B52C4E0001",
+        "CALSGN": "995741003",
+        "COMCHA": "156 - 162.5 MHz",
+        "INFORM": "Notice: 312, 30/12/2022"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9757277,
+          10.2853811
+        ]
+      }
+    }
+  ]
+}

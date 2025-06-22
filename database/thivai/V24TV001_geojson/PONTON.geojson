@@ -1,0 +1,54 @@
+{
+  "type": "FeatureCollection",
+  "name": "PONTON",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 772,
+        "PRIM": 3,
+        "GRUP": 1,
+        "OBJL": 95,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 6,
+        "LNAM": "05E8633E97CB0006",
+        "OBJNAM": "Coast guard"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              107.1009246,
+              10.3944177
+            ],
+            [
+              107.100972,
+              10.3943818
+            ],
+            [
+              107.1010437,
+              10.3944718
+            ],
+            [
+              107.100998,
+              10.3945075
+            ],
+            [
+              107.1009246,
+              10.3944177
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

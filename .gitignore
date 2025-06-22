@@ -4,6 +4,7 @@ __pycache__
 
 .resources.xml.bak
 ui/.*.glade.bak
+ui/main.glade~
 
 ui/assets/tiles/*
 

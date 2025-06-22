@@ -247,6 +247,3 @@ class MapVisualize(Gtk.DrawingArea):
         self.tiles.clear()
         self.queue_draw()
         LOG_DEBUG(f"🗺️ Centered map at my location: ({self.center_lat}, {self.center_lon})")
-
-    def stop(self):
-        LOG_DEBUG(f"🛑 Map view stopped.")

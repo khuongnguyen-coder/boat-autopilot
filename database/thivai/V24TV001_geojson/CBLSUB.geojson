@@ -1,0 +1,53 @@
+{
+  "type": "FeatureCollection",
+  "name": "CBLSUB",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 592,
+        "PRIM": 2,
+        "GRUP": 2,
+        "OBJL": 22,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046474,
+        "FIDS": 81,
+        "LNAM": "05E8633E97CA0051",
+        "CATCBL": 1,
+        "INFORM": "22Kv"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.9591004,
+            10.4199768
+          ],
+          [
+            106.9614501,
+            10.4363687
+          ],
+          [
+            106.9619223,
+            10.4381743
+          ],
+          [
+            106.9627557,
+            10.4412299
+          ],
+          [
+            106.9629139,
+            10.4488889
+          ]
+        ]
+      }
+    }
+  ]
+}

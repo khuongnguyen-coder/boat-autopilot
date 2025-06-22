@@ -1,0 +1,1530 @@
+{
+  "type": "FeatureCollection",
+  "name": "BOYLAT",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 977,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 211,
+        "LNAM": "05E8633E97CB00D3",
+        "LNAM_REFS": [
+          "05E8633E97C800C6",
+          "05E8633E97C900C4"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9614395,
+          10.286105
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 978,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 212,
+        "LNAM": "05E8633E97CB00D4",
+        "LNAM_REFS": [
+          "05E8633E97C800C5",
+          "05E8633E97C900C3"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9617334,
+          10.2884374
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 980,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 214,
+        "LNAM": "05E8633E97CB00D6",
+        "LNAM_REFS": [
+          "05E8633E97C800BA",
+          "05E8633E97C900B0"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0146724,
+          10.4133405
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 981,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 215,
+        "LNAM": "05E8633E97CB00D7",
+        "LNAM_REFS": [
+          "05E8633E97C800BB",
+          "05E8633E97C900B1"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9960057,
+          10.4249798
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 982,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 216,
+        "LNAM": "05E8633E97CB00D8",
+        "LNAM_REFS": [
+          "05E8633E97C800BD",
+          "05E8633E97C900AF"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9735338,
+          10.4322298
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 983,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 217,
+        "LNAM": "05E8633E97CB00D9",
+        "LNAM_REFS": [
+          "05E8633E97C800BC",
+          "05E8633E97C900B2"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.995033,
+          10.4229244
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 984,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 218,
+        "LNAM": "05E8633E97CB00DA",
+        "LNAM_REFS": [
+          "05E8633E97C800B9",
+          "05E8633E97C900AE"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9748944,
+          10.4350905
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 985,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 219,
+        "LNAM": "05E8633E97CB00DB",
+        "LNAM_REFS": [
+          "05E8633E97C800B7",
+          "05E8633E97C900AD"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 4,
+        "COLOUR": [
+          "4",
+          "3",
+          "4"
+        ],
+        "COLPAT": [
+          "1"
+        ],
+        "OBJNAM": "1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.020755,
+          10.4132299
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 986,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 220,
+        "LNAM": "05E8633E97CB00DC",
+        "LNAM_REFS": [
+          "05E8633E97C800B6",
+          "05E8633E97C900AA"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "13"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0161433,
+          10.4332272
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 987,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 221,
+        "LNAM": "05E8633E97CB00DD",
+        "LNAM_REFS": [
+          "05E8633E97C800B8",
+          "05E8633E97C900AB"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "16"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9962583,
+          10.4486219
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 988,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 222,
+        "LNAM": "05E8633E97CB00DE",
+        "LNAM_REFS": [
+          "05E8633E97C800B5",
+          "05E8633E97C900AC"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "14"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0134887,
+          10.4307805
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 991,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 225,
+        "LNAM": "05E8633E97CB00E1",
+        "LNAM_REFS": [
+          "05E8633E97C80076",
+          "05E8633E97C900A1"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.026993,
+          10.3972638
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 992,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 226,
+        "LNAM": "05E8633E97CB00E2",
+        "LNAM_REFS": [
+          "05E8633E97C800A6",
+          "05E8633E97C900A3"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.050673,
+          10.3999488
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 994,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 228,
+        "LNAM": "05E8633E97CB00E4",
+        "LNAM_REFS": [
+          "05E8633E97C80073",
+          "05E8633E97C9003E"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0404656,
+          10.3764984
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 995,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 229,
+        "LNAM": "05E8633E97CB00E5",
+        "LNAM_REFS": [
+          "05E8633E97C80072",
+          "05E8633E97C9003D"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0457572,
+          10.3548422
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 996,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 230,
+        "LNAM": "05E8633E97CB00E6",
+        "LNAM_REFS": [
+          "05E8633E97C80075",
+          "05E8633E97C900A0"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0306052,
+          10.4127781
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 997,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 231,
+        "LNAM": "05E8633E97CB00E7",
+        "LNAM_REFS": [
+          "05E8633E97C800A4",
+          "05E8633E97C9009F",
+          "05E8633E97CA00BB"
+        ],
+        "FFPT_RIND": [
+          2,
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 4,
+        "COLOUR": [
+          "4",
+          "3",
+          "4"
+        ],
+        "COLPAT": [
+          "1"
+        ],
+        "OBJNAM": "11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0354722,
+          10.4128334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 998,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 232,
+        "LNAM": "05E8633E97CB00E8",
+        "LNAM_REFS": [
+          "05E8633E97C80068",
+          "05E8633E97C90040"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0659245,
+          10.3068532
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 999,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 233,
+        "LNAM": "05E8633E97CB00E9",
+        "LNAM_REFS": [
+          "05E8633E97C800A5",
+          "05E8633E97C900A2"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0478132,
+          10.3972784
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1000,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 234,
+        "LNAM": "05E8633E97CB00EA",
+        "LNAM_REFS": [
+          "05E8633E97C8007E",
+          "05E8633E97C9007D"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 4,
+        "COLOUR": [
+          "4",
+          "3",
+          "4"
+        ],
+        "COLPAT": [
+          "1"
+        ],
+        "OBJNAM": "7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.101027,
+          10.3946919
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1001,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 235,
+        "LNAM": "05E8633E97CB00EB",
+        "LNAM_REFS": [
+          "05E8633E97C80098",
+          "05E8633E97C90038"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0689828,
+          10.3087998
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1002,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 236,
+        "LNAM": "05E8633E97CB00EC",
+        "LNAM_REFS": [
+          "05E8633E97C80099",
+          "05E8633E97C90039"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0800783,
+          10.2917335
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1003,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 237,
+        "LNAM": "05E8633E97CB00ED",
+        "LNAM_REFS": [
+          "05E8633E97C8009A",
+          "05E8633E97C9003C"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0494418,
+          10.3557109
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1006,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 240,
+        "LNAM": "05E8633E97CB00F0",
+        "LNAM_REFS": [
+          "05E8633E97C80096",
+          "05E8633E97C9003B",
+          "05E8633E97CA00BC"
+        ],
+        "FFPT_RIND": [
+          2,
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0429759,
+          10.3826257
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1007,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 241,
+        "LNAM": "05E8633E97CB00F1",
+        "LNAM_REFS": [
+          "05E8633E97C80071",
+          "05E8633E97C9003F"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.052272,
+          10.3279547
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1009,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 243,
+        "LNAM": "05E8633E97CB00F3",
+        "LNAM_REFS": [
+          "05E8633E97C80097",
+          "05E8633E97C9003A",
+          "05E8633E97CA00BD"
+        ],
+        "FFPT_RIND": [
+          2,
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0558967,
+          10.3295391
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1011,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 245,
+        "LNAM": "05E8633E97CB00F5",
+        "LNAM_REFS": [
+          "05E8633E97C8007D",
+          "05E8633E97C9007A"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0948779,
+          10.3925399
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1013,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 247,
+        "LNAM": "05E8633E97CB00F7",
+        "LNAM_REFS": [
+          "05E8633E97C80081",
+          "05E8633E97C90078"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0612428,
+          10.3969624
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1014,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 248,
+        "LNAM": "05E8633E97CB00F8",
+        "LNAM_REFS": [
+          "05E8633E97C8007B",
+          "05E8633E97C9007B"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0785727,
+          10.3964617
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1016,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 250,
+        "LNAM": "05E8633E97CB00FA",
+        "LNAM_REFS": [
+          "05E8633E97C80080",
+          "05E8633E97C90081"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0797997,
+          10.394776
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1017,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 251,
+        "LNAM": "05E8633E97CB00FB",
+        "LNAM_REFS": [
+          "05E8633E97C8007F",
+          "05E8633E97C90079"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0880386,
+          10.3928045
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1021,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 255,
+        "LNAM": "05E8633E97CB00FF",
+        "LNAM_REFS": [
+          "05E8633E97C8007C",
+          "05E8633E97C9007C"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0613623,
+          10.3982873
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1025,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046476,
+        "FIDS": 4,
+        "LNAM": "05E8633E97CC0004",
+        "LNAM_REFS": [
+          "05E8633E97CA00A5",
+          "05E8633E97CA00A7"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "1",
+        "INFORM": "Notice to Mariner: 238/TBHH-TCTBDATHHMN, 13th Dec 2017"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0290639,
+          10.4319333
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1026,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046476,
+        "FIDS": 5,
+        "LNAM": "05E8633E97CC0005",
+        "LNAM_REFS": [
+          "05E8633E97CA00A6",
+          "05E8633E97CA00A8"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "OBJNAM": "3",
+        "INFORM": "Notice to Mariner: 238/TBHH-TCTBDATHHMN, 13th Dec 2017"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0314861,
+          10.4443583
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1027,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046476,
+        "FIDS": 6,
+        "LNAM": "05E8633E97CC0006",
+        "LNAM_REFS": [
+          "05E8633E97CA00A9",
+          "05E8633E97CA00AA"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "OBJNAM": "2",
+        "INFORM": "Notice to Mariner: 238/TBHH-TCTBDATHHMN, 13th Dec 2017"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0281472,
+          10.4380916
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1034,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046476,
+        "FIDS": 13,
+        "LNAM": "05E8633E97CC000D",
+        "LNAM_REFS": [
+          "05E8633E97CB0063",
+          "05E8633E97CB0064",
+          "05E8633E97CB007B"
+        ],
+        "FFPT_RIND": [
+          2,
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 4,
+        "COLOUR": [
+          "4",
+          "3",
+          "4"
+        ],
+        "COLPAT": [
+          "1"
+        ],
+        "OBJNAM": "P1",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0399354,
+          10.4053212
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1035,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046476,
+        "FIDS": 14,
+        "LNAM": "05E8633E97CC000E",
+        "LNAM_REFS": [
+          "05E8633E97CB0065",
+          "05E8633E97CB006B"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "DATSTA": "20210427",
+        "OBJNAM": "P3",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0406654,
+          10.4125718
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1036,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046476,
+        "FIDS": 15,
+        "LNAM": "05E8633E97CC000F",
+        "LNAM_REFS": [
+          "05E8633E97CB0066",
+          "05E8633E97CB006C"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "DATSTA": "20210427",
+        "OBJNAM": "P5",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0418882,
+          10.4186348
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1037,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046476,
+        "FIDS": 16,
+        "LNAM": "05E8633E97CC0010",
+        "LNAM_REFS": [
+          "05E8633E97CB0067",
+          "05E8633E97CB006D",
+          "05E8633E97CB007D"
+        ],
+        "FFPT_RIND": [
+          2,
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 2,
+        "COLOUR": [
+          "4"
+        ],
+        "DATSTA": "20210427",
+        "OBJNAM": "P7",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0430802,
+          10.4247457
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1038,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046476,
+        "FIDS": 17,
+        "LNAM": "05E8633E97CC0011",
+        "LNAM_REFS": [
+          "05E8633E97CB0068",
+          "05E8633E97CB006E",
+          "05E8633E97CB007C"
+        ],
+        "FFPT_RIND": [
+          2,
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "DATSTA": "20210427",
+        "OBJNAM": "P2",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0378216,
+          10.4142264
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1039,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046476,
+        "FIDS": 18,
+        "LNAM": "05E8633E97CC0012",
+        "LNAM_REFS": [
+          "05E8633E97CB0069",
+          "05E8633E97CB006F"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "DATSTA": "20210427",
+        "OBJNAM": "P4",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0385701,
+          10.4188146
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1040,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 17,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046476,
+        "FIDS": 19,
+        "LNAM": "05E8633E97CC0013",
+        "LNAM_REFS": [
+          "05E8633E97CB006A",
+          "05E8633E97CB0070"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "BOYSHP": 4,
+        "CATLAM": 1,
+        "COLOUR": [
+          "3"
+        ],
+        "DATSTA": "20210427",
+        "OBJNAM": "P6",
+        "INFORM": "Notice 108, 27/4/2021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0397283,
+          10.4235506
+        ]
+      }
+    }
+  ]
+}

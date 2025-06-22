@@ -1,0 +1,13 @@
+
+* Step 1: Install GDAL
+sudo apt update
+sudo apt install gdal-bin
+ogr2ogr --version
+
+* Step 2: Inspect your S57 file
+ogrinfo US1GC06M.000
+
+* Step 3: Convert specific layers to GeoJSON
+ogr2ogr -f GeoJSON <output>.json <s57_input> DEPARE
+
+

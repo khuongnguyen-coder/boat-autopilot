@@ -143,3 +143,6 @@ class MapView(Gtk.Overlay):
 
     def on_my_location(self, button):
         self.map_visualize.go_my_location()
+
+    def stop(self):
+        LOG_DEBUG(f"🛑 Map view stopped.")

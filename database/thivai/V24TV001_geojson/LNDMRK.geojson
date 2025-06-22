@@ -1,0 +1,175 @@
+{
+  "type": "FeatureCollection",
+  "name": "LNDMRK",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 204,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 74,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046472,
+        "FIDS": 203,
+        "LNAM": "05E8633E97C800CB",
+        "CATLMK": [
+          "13"
+        ],
+        "CONVIS": 1,
+        "NOBJNM": "Tượng chúa giang tay",
+        "OBJNAM": "Statue of christmas"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0846583,
+          10.3263938
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 205,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 74,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046472,
+        "FIDS": 204,
+        "LNAM": "05E8633E97C800CC",
+        "CATLMK": [
+          "9"
+        ],
+        "CONVIS": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0771999,
+          10.3424827
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 220,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 74,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046472,
+        "FIDS": 219,
+        "LNAM": "05E8633E97C800DB",
+        "CATLMK": [
+          "7"
+        ],
+        "CONVIS": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.970503,
+          10.411422
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 976,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 74,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 210,
+        "LNAM": "05E8633E97CB00D2",
+        "LNAM_REFS": [
+          "05E8633E97C800A1"
+        ],
+        "FFPT_RIND": [
+          2
+        ],
+        "CATLMK": [
+          "17"
+        ],
+        "COLOUR": [
+          "1"
+        ],
+        "CONVIS": 1,
+        "FUNCTN": [
+          "33"
+        ],
+        "HEIGHT": 212,
+        "NOBJNM": "Đèn biển Vũng Tàu",
+        "OBJNAM": "Vung Tau lighthouse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0776928,
+          10.3340594
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "RCID": 1020,
+        "PRIM": 1,
+        "GRUP": 2,
+        "OBJL": 74,
+        "RVER": 1,
+        "AGEN": 1512,
+        "FIDN": 1665046475,
+        "FIDS": 254,
+        "LNAM": "05E8633E97CB00FE",
+        "LNAM_REFS": [
+          "05E8633E97C900B7",
+          "05E8633E97CA001A"
+        ],
+        "FFPT_RIND": [
+          2,
+          2
+        ],
+        "CATLMK": [
+          "17"
+        ],
+        "COLOUR": [
+          "1",
+          "3",
+          "1"
+        ],
+        "COLPAT": [
+          "1"
+        ],
+        "CONVIS": 1,
+        "FUNCTN": [
+          "33"
+        ],
+        "NOBJNM": "đèn biển AVAL",
+        "OBJNAM": "AVAL lighthouse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.013992,
+          10.4014474
+        ]
+      }
+    }
+  ]
+}
