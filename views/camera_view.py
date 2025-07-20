@@ -44,13 +44,13 @@ class CameraView(Gtk.Box):
         self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
         if not self.cap.isOpened():
-            LOG_ERR("❌ Could not open camera.")
+            LOG_ERR("[ERR] Could not open camera.")
             return
 
         self.running = True
         self.capture_thread = threading.Thread(target=self.capture_loop, daemon=True)
         self.capture_thread.start()
-        LOG_DEBUG("🎥 Camera started.")
+        LOG_DEBUG("Camera started.")
 
     def stop_camera(self):
         self.running = False
@@ -59,10 +59,10 @@ class CameraView(Gtk.Box):
         if self.cap and self.cap.isOpened():
             self.cap.release()
             self.cap = None
-        LOG_DEBUG("🛑 Camera thread stopped.")
+        LOG_DEBUG("[STOP] Camera thread stopped.")
 
     def pause(self):
-        LOG_DEBUG("⏸️ Pausing camera capture...")
+        LOG_DEBUG("[PAUSE] Pausing camera capture...")
         self.stop_camera()
 
     def resume(self):
@@ -118,7 +118,7 @@ class CameraView(Gtk.Box):
         return False
 
     def stop(self):
-        LOG_DEBUG("🛑 Stopping CameraView...")
+        LOG_DEBUG("[STOP] Stopping CameraView...")
         self.stop_camera()
-        LOG_DEBUG("✅ CameraView stopped.")
+        LOG_DEBUG("[OK] CameraView stopped.")
 

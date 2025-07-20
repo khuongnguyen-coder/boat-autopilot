@@ -3,8 +3,8 @@
 
 This repository includes two core GTK3-based UI components for a boat autopilot system:
 
-- **🗺️ MapView** — a `Gtk.DrawingArea` widget for OpenStreetMap tile rendering  
-- **🎥 CameraView** — a `Gtk.DrawingArea` widget for live video streaming via OpenCV  
+- ** MapView** — a `Gtk.DrawingArea` widget for OpenStreetMap tile rendering  
+- ** CameraView** — a `Gtk.DrawingArea` widget for live video streaming via OpenCV  
 
 Both are designed to be embedded into GTK3 applications and work together in a cohesive interface.
 

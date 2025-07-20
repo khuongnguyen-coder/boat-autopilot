@@ -5,11 +5,11 @@ def list_available_cameras(max_index=10):
     for index in range(max_index):
         cap = cv2.VideoCapture(index)
         if cap is not None and cap.isOpened():
-            print(f"✅ Camera found at index {index}")
+            print(f"[OK] Camera found at index {index}")
             available_cameras.append(index)
             cap.release()
         else:
-            print(f"❌ No camera at index {index}")
+            print(f"[ERR] No camera at index {index}")
     return available_cameras
 
 if __name__ == "__main__":

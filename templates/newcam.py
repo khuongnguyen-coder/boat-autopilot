@@ -24,7 +24,7 @@ class CameraApp(Gtk.Window):
         self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
         if not self.cap.isOpened():
-            print("❌ Failed to open camera.")
+            print("[ERR] Failed to open camera.")
             self.image.set_from_icon_name("dialog-error", Gtk.IconSize.DIALOG)
             return
 
@@ -56,7 +56,7 @@ class CameraApp(Gtk.Window):
                 )
                 self.image.set_from_pixbuf(pixbuf)
             except Exception as e:
-                print(f"❌ Frame conversion error: {e}")
+                print(f"[ERR] Frame conversion error: {e}")
         return True  # Keep updating
 
     def on_quit(self, *args):

@@ -18,14 +18,14 @@ class VnestAutopilot(Gtk.Application):
     def do_startup(self):
         Gtk.Application.do_startup(self)
 
-        # ✅ Register the GResource before loading any UI
+        # [OK] Register the GResource before loading any UI
         try:
             resource = Gio.Resource.load("resources.gresource")
             Gio.resources_register(resource)
         except Exception as e:
             LOG_ERR(f"Failed to load resources.gresource: {e}")
 
-        # ✅ Load CSS from resource
+        # [OK] Load CSS from resource
         css = Gtk.CssProvider()
         css.load_from_resource("/vn/vnest/autopilot/ui/css/style.css")
         Gtk.StyleContext.add_provider_for_screen(

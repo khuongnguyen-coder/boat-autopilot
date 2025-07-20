@@ -20,7 +20,7 @@ class MainView:
         self.window.set_title("Vnest Autopilot")
         self.window.set_application(app)
 
-        # ✅ Connect destroy before showing window
+        # [OK] Connect destroy before showing window
         self.window.connect("destroy", self.on_destroy)
 
         # === Notebook & Boxes ===
@@ -43,7 +43,7 @@ class MainView:
             self.box_map.show_all()
             LOG_DEBUG("MapView initialized successfully")
         else:
-            LOG_ERR("❌ Could not find 'window_box_map' in UI.")
+            LOG_ERR("[ERR] Could not find 'window_box_map' in UI.")
 
         # === Camera View Setup ===
         self.box_camera = builder.get_object("window_box_camera")
@@ -66,7 +66,7 @@ class MainView:
             LOG_DEBUG("Camera is paused by default case first tab is not belong to camera")
             self.camera_view.pause()
         else:
-            LOG_ERR("❌ Could not find 'window_box_camera' in UI.")
+            LOG_ERR("[ERR] Could not find 'window_box_camera' in UI.")
 
         # === Connect notebook tab change ===
         self.notebook.connect("switch-page", self.on_switch_page)

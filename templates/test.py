@@ -8,10 +8,10 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 if not cap.isOpened():
-    print("❌ Failed to open webcam.")
+    print("[ERR] Failed to open webcam.")
     exit(1)
 
-print("✅ Webcam opened. Press ESC to quit.")
+print("[OK] Webcam opened. Press ESC to quit.")
 
 # Create a named window first
 cv2.namedWindow("Webcam Test", cv2.WINDOW_NORMAL)

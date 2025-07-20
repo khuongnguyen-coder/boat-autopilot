@@ -21,10 +21,10 @@ class WebcamWindow(Gtk.Window):
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
         if not self.cap.isOpened():
-            print("❌ Could not open webcam.")
+            print("[ERR] Could not open webcam.")
             self.image.set_from_icon_name("dialog-error", Gtk.IconSize.DIALOG)
         else:
-            print("✅ Webcam opened successfully.")
+            print("[OK] Webcam opened successfully.")
             GLib.timeout_add(30, self.update_frame)
 
         self.connect("destroy", self.on_destroy)
@@ -52,7 +52,7 @@ class WebcamWindow(Gtk.Window):
             )
             self.image.set_from_pixbuf(pixbuf)
         except Exception as e:
-            print(f"❌ Error converting frame: {e}")
+            print(f"[ERR] Error converting frame: {e}")
 
         return True  # Keep the loop running
 

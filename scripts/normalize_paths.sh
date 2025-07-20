@@ -4,7 +4,7 @@ echo ""
 INPUT_FILE="$1"
 
 if [[ ! -f "$INPUT_FILE" ]]; then
-    echo "❌ File not found: $INPUT_FILE"
+    echo "[ERR] File not found: $INPUT_FILE"
     exit 1
 fi
 
@@ -16,5 +16,5 @@ cp "$INPUT_FILE" "$DIR/.${BASE}.bak"
 # Normalize any '../assets/...' to 'assets/...'
 sed -i 's|\.\./assets/|assets/|g' "$INPUT_FILE"
 
-echo "✅ Normalized Glade paths in $INPUT_FILE"
+echo "[OK] Normalized Glade paths in $INPUT_FILE"
 echo ""
