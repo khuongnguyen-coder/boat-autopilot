@@ -4,6 +4,7 @@ from gi.repository import Gtk
 
 from views.map_view import MapView
 from views.camera_view import CameraView
+from views.setting_view import SettingView
 
 from utils.log import utils_log_get_logger
 LOG_INFO  = utils_log_get_logger("main_view")["info"]
@@ -25,8 +26,6 @@ class MainView:
 
         # === Notebook & Boxes ===
         self.notebook = builder.get_object("main_notebook")
-        self.box_camera = builder.get_object("window_box_camera")
-        self.box_map = builder.get_object("window_box_map")
 
         # === Map View Setup ===
         self.box_map = builder.get_object("window_box_map")
@@ -34,7 +33,7 @@ class MainView:
             self.box_map.set_hexpand(True)
             self.box_map.set_vexpand(True)
 
-            LOG_DEBUG("Initializing MapView...")
+            LOG_DEBUG("Initializing MapView ...")
             self.map_view = MapView()
             self.map_view.set_hexpand(True)
             self.map_view.set_vexpand(True)
@@ -53,7 +52,7 @@ class MainView:
             self.box_camera.set_halign(Gtk.Align.FILL)
             self.box_camera.set_valign(Gtk.Align.FILL)
 
-            LOG_DEBUG("Initializing CameraView...")
+            LOG_DEBUG("Initializing CameraView ...")
             self.camera_view = CameraView()
             self.camera_view.set_hexpand(True)
             self.camera_view.set_vexpand(True)
@@ -68,6 +67,22 @@ class MainView:
         else:
             LOG_ERR("[ERR] Could not find 'window_box_camera' in UI.")
 
+        # === Camera View Setup ===
+        self.box_setting = builder.get_object("window_box_setting")
+        if self.box_setting:
+            self.box_setting.set_hexpand(True)
+            self.box_setting.set_vexpand(True)
+
+            LOG_DEBUG("Initializing SettingView ...")
+            self.setting_view = SettingView(builder)
+            # self.setting_view.set_hexpand(True)
+            # self.setting_view.set_vexpand(True)
+
+            # self.box_setting.pack_start(self.setting_view, expand=True, fill=True, padding=0)
+            # self.box_setting.show_all()
+            LOG_DEBUG("MapView initialized successfully")
+        else:
+            LOG_ERR("[ERR] Could not find 'window_box_setting' in UI.")
         # === Connect notebook tab change ===
         self.notebook.connect("switch-page", self.on_switch_page)
 

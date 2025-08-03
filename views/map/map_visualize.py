@@ -23,6 +23,10 @@ ZOOM = 16
 MY_LOCATION_LAT = 10.8382543
 MY_LOCATION_LON = 106.8317088
 
+from config import ENABLE_FEATURE_TILE_DOWNLOAD_RUNTIME
+
+G_TILE_EMPTY = "empty.png"
+
 class MapVisualize(Gtk.DrawingArea):
     def __init__(self):
         super().__init__()
@@ -165,7 +169,8 @@ class MapVisualize(Gtk.DrawingArea):
             for j in range(tiles_y):
                 x = start_x + i
                 y = start_y + j
-                tile_path = self.download_tile(x, y, self.zoom)
+                tile_path = self.query_tile(x, y, self.zoom)
+                LOG_DEBUG(f"Tile path: {tile_path}")
                 if tile_path:
                     try:
                         key = f"{self.zoom}/{x}/{y}"
@@ -208,25 +213,28 @@ class MapVisualize(Gtk.DrawingArea):
         lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * ytile / n)))
         return math.degrees(lat_rad), lon_deg
 
-    def download_tile(self, x, y, zoom):
+    def query_tile(self, x, y, zoom):
         if x < 0 or y < 0 or x >= 2 ** zoom or y >= 2 ** zoom:
             return None
         tile_name = os.path.join(str(zoom), str(x), f"{y}.png")
         tile_path = utils_path_get_asset("tiles", tile_name)
         if not os.path.exists(tile_path):
-            os.makedirs(os.path.dirname(tile_path), exist_ok=True)
-            url = f"https://tile.openstreetmap.org/{zoom}/{x}/{y}.png"
-            headers = {
-                "User-Agent": "MyGTKMapViewer/1.0 (ntkhuong.coder@gmail.com)"
-            }
-            req = urllib.request.Request(url, headers=headers)
-            try:
-                with urllib.request.urlopen(req) as response, open(tile_path, 'wb') as out_file:
-                    out_file.write(response.read())
-                LOG_DEBUG(f"Downloaded tile {tile_path}")
-            except Exception as e:
-                LOG_ERR(f"Download error for tile {x},{y}: {e}")
-                return None
+            if ENABLE_FEATURE_TILE_DOWNLOAD_RUNTIME:
+                os.makedirs(os.path.dirname(tile_path), exist_ok=True)
+                url = f"https://tile.openstreetmap.org/{zoom}/{x}/{y}.png"
+                headers = {
+                    "User-Agent": "MyGTKMapViewer/1.0 (ntkhuong.coder@gmail.com)"
+                }
+                req = urllib.request.Request(url, headers=headers)
+                try:
+                    with urllib.request.urlopen(req) as response, open(tile_path, 'wb') as out_file:
+                        out_file.write(response.read())
+                    LOG_DEBUG(f"Downloaded tile {tile_path}")
+                except Exception as e:
+                    LOG_ERR(f"Download error for tile {x},{y}: {e}")
+                    return None
+            else:
+                tile_path = utils_path_get_asset("tiles", G_TILE_EMPTY)
         return tile_path
     
     def set_zoom(self, new_zoom):

@@ -39,7 +39,7 @@ def __download_tile(x, y, zoom, tile_dir, user_agent, debug=False):
     try:
         with urllib.request.urlopen(req) as response, open(tile_path, 'wb') as out_file:
             out_file.write(response.read())
-        __print_debug(f"[↓] Downloaded: {tile_path}", debug)
+        print(f"[↓] Downloaded: {tile_path}")
         return True
     except Exception as e:
         __print_debug(f"[!] Failed: {x},{y} (zoom {zoom}) -> {e}", debug)

@@ -68,7 +68,7 @@ class CameraView(Gtk.Box):
     def resume(self):
         if self.running:
             return  # Already running
-        LOG_DEBUG("▶️ Resuming camera capture...")
+        LOG_DEBUG("Resuming camera capture...")
         self.start_camera()
 
     def capture_loop(self):

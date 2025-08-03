@@ -11,6 +11,8 @@ LOG_DEBUG = utils_log_get_logger("main")["debug"]
 LOG_WARN  = utils_log_get_logger("main")["warn"]
 LOG_ERR   = utils_log_get_logger("main")["err"]
 
+from config import ENABLE_FEATURE_TILE_DOWNLOAD_RUNTIME
+
 class VnestAutopilot(Gtk.Application):
     def __init__(self):
         super().__init__(application_id="vn.vnest.autopilot")

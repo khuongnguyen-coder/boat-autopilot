@@ -112,7 +112,7 @@ def s57_parser(s57_path, outdir_path: str = None):
     									zoom_range = metadata["zoom_range"],
     									tile_dir = metadata["tile_dir"],
     									user_agent = USER_AGENT,
-    									max_workers = 10, debug = True)
+    									max_workers = 10, debug = False)
     metadata["tile_dir_size_kb"] = get_dir_size_kb(metadata["tile_dir"])
     print(f"✅ [tile_dir]: {metadata["tile_dir"]}")
     print(f"✅ [tile_count]: {metadata["tile_count"]}")
