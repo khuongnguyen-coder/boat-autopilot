@@ -24,6 +24,7 @@ MY_LOCATION_LAT = 10.8382543
 MY_LOCATION_LON = 106.8317088
 
 from config import ENABLE_FEATURE_TILE_DOWNLOAD_RUNTIME
+from config import VNEST_AUTOPILOT_DATABASE_PATH
 
 G_TILE_EMPTY = "empty.png"
 
@@ -59,6 +60,7 @@ class MapVisualize(Gtk.DrawingArea):
         self.zoom = ZOOM
         self.offset_x = 0
         self.offset_y = 0
+        self.tiles_dir_path = None
         self.tiles = {}
 
         self.clicked_latlon = None
@@ -170,7 +172,7 @@ class MapVisualize(Gtk.DrawingArea):
                 x = start_x + i
                 y = start_y + j
                 tile_path = self.query_tile(x, y, self.zoom)
-                LOG_DEBUG(f"Tile path: {tile_path}")
+                # LOG_DEBUG(f"Tile path: {tile_path}")
                 if tile_path:
                     try:
                         key = f"{self.zoom}/{x}/{y}"
@@ -216,8 +218,25 @@ class MapVisualize(Gtk.DrawingArea):
     def query_tile(self, x, y, zoom):
         if x < 0 or y < 0 or x >= 2 ** zoom or y >= 2 ** zoom:
             return None
+
         tile_name = os.path.join(str(zoom), str(x), f"{y}.png")
-        tile_path = utils_path_get_asset("tiles", tile_name)
+        
+        # LOG_DEBUG(f" * tiles_dir_path: {self.tiles_dir_path}")
+        # LOG_DEBUG(f" * tile_name: {tile_name}")
+
+        # Case 1: tiles_dir_path is set
+        if self.tiles_dir_path:
+            tile_path = os.path.join(self.tiles_dir_path, tile_name)
+        else:
+            # fallback to empty tile
+            tile_path = utils_path_get_asset("tiles", G_TILE_EMPTY)
+            LOG_DEBUG(f"[✗] tiles_dir_path not set, using empty tile: {tile_path}")
+            # return tile_path
+            return None
+
+        LOG_DEBUG(f"Check tile path: {tile_path}")
+
+        # Check if tile exists
         if not os.path.exists(tile_path):
             if ENABLE_FEATURE_TILE_DOWNLOAD_RUNTIME:
                 os.makedirs(os.path.dirname(tile_path), exist_ok=True)
@@ -229,14 +248,20 @@ class MapVisualize(Gtk.DrawingArea):
                 try:
                     with urllib.request.urlopen(req) as response, open(tile_path, 'wb') as out_file:
                         out_file.write(response.read())
-                    LOG_DEBUG(f"Downloaded tile {tile_path}")
+                    LOG_DEBUG(f"[✓] Downloaded tile: {tile_path}")
                 except Exception as e:
-                    LOG_ERR(f"Download error for tile {x},{y}: {e}")
+                    LOG_ERR(f"[✗] Download error for tile {x},{y}: {e}")
+                    # return utils_path_get_asset("tiles", G_TILE_EMPTY)
                     return None
             else:
-                tile_path = utils_path_get_asset("tiles", G_TILE_EMPTY)
+                # tile_path = utils_path_get_asset("tiles", G_TILE_EMPTY)
+                tile_path = None
+                # LOG_DEBUG(f"[✗] Tile not found and downloading disabled. Using empty: {tile_path}")
+
+
+        # LOG_DEBUG(f"tile_path: {tile_path}")
         return tile_path
-    
+
     def set_zoom(self, new_zoom):
         new_zoom = max(1, min(new_zoom, 19))
         if new_zoom != self.zoom:
@@ -254,4 +279,135 @@ class MapVisualize(Gtk.DrawingArea):
         self.zoom = ZOOM
         self.tiles.clear()
         self.queue_draw()
-        LOG_DEBUG(f"🗺️ Centered map at my location: ({self.center_lat}, {self.center_lon})")
+        LOG_DEBUG(f"Centered map at my location: ({self.center_lat}, {self.center_lon})")
+
+    def get_center_location(self):
+        """
+        Returns the current center location of the map as a (lat, lon) tuple.
+        """
+        return (self.center_lat, self.center_lon)
+
+    def update_center_location(self, lat, lon):
+        """
+        Update the map view to center on the specified latitude and longitude.
+        """
+        if not isinstance(lat, (int, float)) or not isinstance(lon, (int, float)):
+            LOG_WARN(f"Ignored invalid center location: lat={lat}, lon={lon}")
+            return
+
+        self.center_lat = lat
+        self.center_lon = lon
+        self.offset_x = 0
+        self.offset_y = 0
+        self.queue_draw()
+        LOG_DEBUG(f"Center updated to: ({lat:.6f}, {lon:.6f})")
+
+    def start_center_location_simulator(self, interval_ms=1000):
+        """
+        Start a simulated center location updater (moves east slightly every second).
+        """
+        self._simulator_running = True
+        self._simulated_lat = self.center_lat
+        self._simulated_lon = self.center_lon
+
+        def simulate_tick():
+            if not self._simulator_running:
+                return False  # stop timer
+
+            # Simulate eastward movement
+            self._simulated_lon += 0.0001
+            self.update_center_location(self._simulated_lat, self._simulated_lon)
+
+            return True  # continue timer
+
+        GLib.timeout_add(interval_ms, simulate_tick)
+
+    def stop_center_location_simulator(self):
+        """
+        Stop the simulated center location updates.
+        """
+        self._simulator_running = False
+
+    def update_extent(self, tile_base_path=None, center_lat=None, center_lon=None, zoom=None):
+        """
+        Update the map's extent, tile source, and zoom level — only if all parameters are valid.
+
+        Parameters:
+            tile_base_path (str): Path to tile folder (must be a directory).
+            center_lat (float): Latitude in range [-90, 90].
+            center_lon (float): Longitude in range [-180, 180].
+            zoom (int): Zoom level in range [1, 19].
+        """
+
+        valid = True
+
+        # --- Validate tile path ---
+        if tile_base_path:
+            full_tile_path = os.path.join(VNEST_AUTOPILOT_DATABASE_PATH, tile_base_path)
+
+            if os.path.isdir(full_tile_path):
+                LOG_DEBUG(f"[✓] Valid tile path: {full_tile_path}")
+            else:
+                LOG_WARN(f"[✗] Invalid tile path (not a directory): {full_tile_path}")
+                valid = False
+
+        # --- Validate center coordinates ---
+        if center_lat is not None and center_lon is not None:
+            if (
+                isinstance(center_lat, (int, float)) and -90 <= center_lat <= 90 and
+                isinstance(center_lon, (int, float)) and -180 <= center_lon <= 180
+            ):
+                LOG_DEBUG(f"[✓] Valid center: ({center_lat:.6f}, {center_lon:.6f})")
+            else:
+                LOG_WARN(f"[✗] Invalid center coordinates: lat={center_lat}, lon={center_lon}")
+                valid = False
+        elif center_lat is not None or center_lon is not None:
+            LOG_WARN(f"[✗] Missing one of lat/lon for center: lat={center_lat}, lon={center_lon}")
+            valid = False
+
+
+        # --- Validate zoom ---
+        if zoom is not None:
+            if isinstance(zoom, int) and 1 <= zoom <= 19:
+                LOG_DEBUG(f"[✓] Valid zoom: {zoom}")
+            else:
+                LOG_WARN(f"[✗] Invalid zoom level: {zoom}")
+                valid = False
+
+        # --- Apply only if all valid ---
+        if valid:
+            if tile_base_path:
+                self.tiles_dir_path = full_tile_path
+            if center_lat is not None and center_lon is not None:
+                self.center_lat = center_lat
+                self.center_lon = center_lon
+            if zoom is not None:
+                self.zoom = zoom
+
+            self.offset_x = 0
+            self.offset_y = 0
+            self.tiles.clear()
+            self.queue_draw()
+
+            LOG_DEBUG("[✓] update_extent applied")
+        else:
+            LOG_WARN("[✗] update_extent aborted due to invalid parameters")
+
+
+    def handler_pan_up(self):
+        self.offset_y += 100
+        self.queue_draw()
+    
+    def handler_pan_down(self):
+        self.offset_y -= 100
+        self.queue_draw()
+    
+    def handler_pan_left(self):
+        self.offset_x += 100
+        self.queue_draw()
+
+    def handler_pan_right(self):
+        self.offset_x -= 100
+        self.queue_draw()
+
+

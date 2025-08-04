@@ -11,10 +11,11 @@ LOG_WARN  = utils_log_get_logger("map_view")["warn"]
 LOG_ERR   = utils_log_get_logger("map_view")["err"]
 
 class MapView(Gtk.Overlay):
-    def __init__(self):
+    def __init__(self, _map_visualize):
         super().__init__()
         # 📍 Add the map view first
-        self.map_visualize = MapVisualize()
+        # self.map_visualize = MapVisualize()
+        self.map_visualize = _map_visualize
         self.add(self.map_visualize)
 
         # ➕ Zoom In button
@@ -102,6 +103,9 @@ class MapView(Gtk.Overlay):
         img = Gtk.Image.new_from_resource("/vn/vnest/autopilot/ui/assets/map/map_arrow_right.png")
         self.btn_right.set_image(img)
         self.btn_right.set_always_show_image(True)
+
+        # Start simulation (e.g. in your main view init)
+        self.map_visualize.start_center_location_simulator(interval_ms=1000)
     
     def make_arrow_button(self, arrow_type, tooltip, callback, margin_bottom, margin_end):
         btn = Gtk.Button()
@@ -126,23 +130,21 @@ class MapView(Gtk.Overlay):
         self.map_visualize.set_zoom(self.map_visualize.zoom - 1)
     
     def on_pan_up(self, button):
-        self.map_visualize.offset_y += 100
-        self.map_visualize.queue_draw()
+        self.map_visualize.handler_pan_up()
 
     def on_pan_down(self, button):
-        self.map_visualize.offset_y -= 100
-        self.map_visualize.queue_draw()
+        self.map_visualize.handler_pan_down()
 
     def on_pan_left(self, button):
-        self.map_visualize.offset_x += 100
-        self.map_visualize.queue_draw()
+        self.map_visualize.handler_pan_left()
 
     def on_pan_right(self, button):
-        self.map_visualize.offset_x -= 100
-        self.map_visualize.queue_draw()
+        self.map_visualize.handler_pan_right()
 
     def on_my_location(self, button):
         self.map_visualize.go_my_location()
 
     def stop(self):
+        # Stop simulation later if needed
+        self.map_visualize.stop_center_location_simulator()
         LOG_DEBUG(f"[STOP] Map view stopped.")

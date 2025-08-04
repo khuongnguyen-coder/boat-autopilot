@@ -10,8 +10,8 @@ class BoundingBox:
 
 @dataclass
 class Center:
-    x: float
-    y: float
+    lon: float
+    lat: float
 
 @dataclass
 class ZoomRange:
@@ -23,6 +23,7 @@ class EncMetadata:
     enc_name: str
     s57_path: str
     file_size_kb: float
+    location_name: List[str]
     geojson_dir: str
     layers: List[str]
     bounding_box: BoundingBox

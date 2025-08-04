@@ -6,6 +6,8 @@ from views.map_view import MapView
 from views.camera_view import CameraView
 from views.setting_view import SettingView
 
+from views.map.map_visualize import MapVisualize
+
 from utils.log import utils_log_get_logger
 LOG_INFO  = utils_log_get_logger("main_view")["info"]
 LOG_DEBUG = utils_log_get_logger("main_view")["debug"]
@@ -16,6 +18,8 @@ class MainView:
     def __init__(self, app):
         builder = Gtk.Builder()
         builder.add_from_resource("/vn/vnest/autopilot/ui/main.glade")
+
+        self.map_visualize = MapVisualize()
 
         self.window = builder.get_object("main_window")
         self.window.set_title("Vnest Autopilot")
@@ -34,7 +38,7 @@ class MainView:
             self.box_map.set_vexpand(True)
 
             LOG_DEBUG("Initializing MapView ...")
-            self.map_view = MapView()
+            self.map_view = MapView(self.map_visualize)
             self.map_view.set_hexpand(True)
             self.map_view.set_vexpand(True)
 
@@ -74,7 +78,7 @@ class MainView:
             self.box_setting.set_vexpand(True)
 
             LOG_DEBUG("Initializing SettingView ...")
-            self.setting_view = SettingView(builder)
+            self.setting_view = SettingView(builder, self.map_visualize)
             # self.setting_view.set_hexpand(True)
             # self.setting_view.set_vexpand(True)
 

@@ -23,7 +23,33 @@ class ExtentManager:
 
         self.metadata_list = load_all_metadata(VNEST_AUTOPILOT_DATABASE_PATH)
 
-        print(f"\nTotal loaded: {len(self.metadata_list)} ENC metadata files.")
+        LOG_DEBUG(f"\nTotal loaded: {len(self.metadata_list)} ENC metadata files.")
+
+        location_list = self.extent_get_location_list()
+        LOG_DEBUG(f"location_list: {location_list}")
+    
+    def extent_get_location_list(self):
+        location_list = []
+
+        if self.metadata_list is None:
+            LOG_ERR("Metadata list was invalid.")
+        else:
+            for metadata in self.metadata_list:
+                names = metadata.location_name
+
+                if isinstance(names, list) and names:
+                    valid_names = [name.strip() for name in names if isinstance(name, str) and name.strip()]
+                    if valid_names:
+                        combined = ", ".join(valid_names)
+                        location_list.append(combined)
+                        LOG_DEBUG(f"[✓] Loaded: {combined}")
+                    else:
+                        LOG_DEBUG("[✗] Skipped: list had no valid names")
+                else:
+                    LOG_DEBUG("[✗] Skipped: location_name not a valid list")
+
+        LOG_DEBUG(f"location_list: {location_list}")
+        return location_list
 
 def load_all_metadata(root_dir):
     metadata_list = []
@@ -39,6 +65,7 @@ def load_all_metadata(root_dir):
                             enc_name=data["enc_name"],
                             s57_path=data["s57_path"],
                             file_size_kb=data["file_size_kb"],
+                            location_name=data["location_name"],
                             geojson_dir=data["geojson_dir"],
                             layers=data["layers"],
                             bounding_box=BoundingBox(**data["bounding_box"]),
