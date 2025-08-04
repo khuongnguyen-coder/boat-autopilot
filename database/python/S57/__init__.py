@@ -9,7 +9,10 @@ GeoJSON export and bounding box utilities.
 """
 
 # Export function to convert S57 ENC layers to GeoJSON
-from .export_geojson import export_geojson
+from .export_geojson import (
+	export_geojson,				# Extract geojson file to visualize objects in Map
+	extract_named_locations		# Extract location name to display on application
+)
 
 # Bounding box utilities
 from .bounding_box import (
@@ -22,6 +25,7 @@ from .bounding_box import (
 # Define the public API of the S57 package
 __all__ = [
     "export_geojson",
+    "extract_named_locations",
     "bounding_box",
     "bounding_box_padded",
     "bounding_box_get_center",

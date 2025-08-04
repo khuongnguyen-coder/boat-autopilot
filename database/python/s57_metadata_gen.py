@@ -80,6 +80,9 @@ def s57_parser(s57_path, outdir_path: str = None):
     metadata["metadata_path"] = metadata_path
     print(f"✅ [metadata_path]: {metadata["metadata_path"]}")
 
+    metadata["location_name"] = extract_named_locations(metadata["s57_path"])
+    print(f"✅ [location_name]: {metadata["location_name"]}")
+
     # [4]
     metadata["geojson_dir"] = os.path.join(metadata["outdir_path"], "geojsons")
     os.makedirs(metadata["geojson_dir"], exist_ok=True)

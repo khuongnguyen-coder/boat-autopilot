@@ -1,0 +1,8 @@
+python ./s57_metadata_gen.py -s 20250622/ENC_VN_2023/ANTHOI_db/ENC_ROOT/V25AT001.000 -o ENC_VN_2023/ANTHOI || exit 1
+python ./s57_metadata_gen.py -s 20250622/ENC_VN_2023/BANGOI_db/ENC_ROOT/V24BN001.000 -o ENC_VN_2023/BANGOI || exit 1
+python ./s57_metadata_gen.py -s 20250622/ENC_VN_2023/BINHTRI_db/ENC_ROOT/V24BT001.000 -o ENC_VN_2023/BINHTRI || exit 1
+python ./s57_metadata_gen.py -s 20250622/ENC_VN_2023/CONDAO_db/ENC_ROOT/V24CD001.000 -o ENC_VN_2023/CONDAO || exit 1
+python ./s57_metadata_gen.py -s 20250622/ENC_VN_2023/DAMMON_db/ENC_ROOT/V24DM001.000 -o ENC_VN_2023/DAMMON || exit 1
+python ./s57_metadata_gen.py -s 20250622/ENC_VN_2023/DONGNAI_db/ENC_ROOT/V24DN001.000 -o ENC_VN_2023/DONGNAI || exit 1
+python ./s57_metadata_gen.py -s 20250622/ENC_VN_2023/HATIEN_db/ENC_ROOT/V24HT001.000 -o ENC_VN_2023/HATIEN || exit 1
+

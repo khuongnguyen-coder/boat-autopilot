@@ -3,9 +3,13 @@
 import os
 import sys
 import json
+import re
 import subprocess
 from datetime import datetime
 from pathlib import Path
+from osgeo import ogr
+
+ogr.UseExceptions()  # Avoid GDAL 4.0 warning
 
 def __print_debug(msg, debug=False):
     if debug:
@@ -77,6 +81,66 @@ def export_geojson(s57_path, output_dir, debug: bool = False):
 
     return layers
 
+# Compile pattern to match provinces/districts (Vietnamese + English)
+province_district_pattern = re.compile(
+    r"\b(tỉnh|thành phố|quận|huyện|thị xã|province|district|city|municipality)\b",
+    re.IGNORECASE
+)
+
+def is_province_or_district(name: str) -> bool:
+    return bool(province_district_pattern.search(name))
+
+def extract_named_locations(s57_path: str, debug: bool = False) -> list[str]:
+    """
+    Extract and return province/district names from an ENC (S-57) file.
+
+    Parameters:
+        s57_path (str): Path to the ENC .000 file (usually the base file of an S-57 dataset).
+        debug (bool): Enable verbose output.
+
+    Returns:
+        list[str]: List of found location names (province and district level).
+    """
+
+    if not os.path.isfile(s57_path):
+        print(f"Error: File not found: {s57_path}")
+        sys.exit(2)
+
+    dataset = ogr.Open(s57_path)
+    if not dataset:
+        print(f"Error: Unable to open dataset: {s57_path}")
+        sys.exit(1)
+
+    layer_names = __get_layer_names(s57_path, debug=debug)
+    if not layer_names:
+        print("Warning: No layers found in file.")
+        sys.exit(3)
+
+    if debug:
+        print("Found layers:")
+        for name in layer_names:
+            print(f"  - {name}")
+        print()
+
+    location_names = set()  # Use set to avoid duplicates
+
+    for name in layer_names:
+        layer = dataset.GetLayerByName(name)
+        if not layer:
+            __print_debug(f"Skipping missing layer: {name}", debug)
+            continue
+
+        __print_debug(f"Processing layer: {name}", debug)
+
+        for feature in layer:
+            if "OBJNAM" in feature.keys():
+                objnam = feature.GetField("OBJNAM")
+                if objnam and is_province_or_district(objnam):
+                    location_names.add(objnam)
+                    __print_debug(f"Found name: {objnam} in layer: {name}", debug)
+
+    return sorted(location_names)
+
 # --- Main entry point ---
 if __name__ == "__main__":
     args = sys.argv[1:]
@@ -91,4 +155,6 @@ if __name__ == "__main__":
     if not debug:
         print("Hint: Set DEBUG=1 or use --debug to enable verbose output")
 
-    export_geojson(s57_file, out_dir, debug=debug)
+    # export_geojson(s57_file, out_dir, debug=debug)
+    location_names = extract_named_locations(s57_file, debug=debug)
+    print(f"Found location_names: {location_names}")

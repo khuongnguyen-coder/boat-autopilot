@@ -143,8 +143,8 @@ def bounding_box_get_center(bbox: dict) -> Optional[dict]:
         return None
 
     return {
-        "x": (bbox["minx"] + bbox["maxx"]) / 2,
-        "y": (bbox["miny"] + bbox["maxy"]) / 2
+        "lon": (bbox["minx"] + bbox["maxx"]) / 2,
+        "lat": (bbox["miny"] + bbox["maxy"]) / 2
     }
 
 def bounding_box_zoom_range() -> dict:
