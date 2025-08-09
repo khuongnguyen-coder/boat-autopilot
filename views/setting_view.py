@@ -62,8 +62,7 @@ class SettingView():
             selected_metadata = model[tree_iter][1]  # column 1 is EncMetadata object
             LOG_DEBUG(f"Selected ENC metadata: {selected_metadata.enc_name} : {selected_metadata.s57_path}")
 
-            # def update_extent(self, *, tile_base_path=None, center_lat=None, center_lon=None, zoom=None):
             self.map_visualize.update_extent(selected_metadata.tile_dir,
                                             selected_metadata.center.lat,
                                             selected_metadata.center.lon,
-                                            selected_metadata.zoom_range.min)
+                                            selected_metadata.zoom_range)

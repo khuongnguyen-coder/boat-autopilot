@@ -105,7 +105,7 @@ class MapView(Gtk.Overlay):
         self.btn_right.set_always_show_image(True)
 
         # Start simulation (e.g. in your main view init)
-        self.map_visualize.start_center_location_simulator(interval_ms=1000)
+        # self.map_visualize.start_center_location_simulator(interval_ms=1000)
     
     def make_arrow_button(self, arrow_type, tooltip, callback, margin_bottom, margin_end):
         btn = Gtk.Button()
@@ -124,10 +124,10 @@ class MapView(Gtk.Overlay):
         return btn
 
     def on_zoom_in(self, button):
-        self.map_visualize.set_zoom(self.map_visualize.zoom + 1)
+        self.map_visualize.set_zoom_in()
 
     def on_zoom_out(self, button):
-        self.map_visualize.set_zoom(self.map_visualize.zoom - 1)
+        self.map_visualize.set_zoom_out()
     
     def on_pan_up(self, button):
         self.map_visualize.handler_pan_up()

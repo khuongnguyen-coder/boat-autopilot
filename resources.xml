@@ -16,6 +16,7 @@
     <file>ui/assets/map/map_zoon_in.png</file>
     <file>ui/assets/map/map_zoon_out.png</file>
     <file>ui/assets/map/marker.png</file>
+    <file>ui/assets/map/ship.png</file>
     <file>ui/css/style.css</file>
   </gresource>
 
