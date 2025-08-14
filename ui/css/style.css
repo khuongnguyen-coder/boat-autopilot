@@ -23,8 +23,21 @@ button.map-button {
 }
 
 /* Zoom/Center info label at bottom-left */
-.map-info-label {
+.map_info_label {
   color: rgba(255, 51, 0, 0.5); /* 0.5 = 50% opacity */
   font-size: 24px;
   font-weight: bold;
 }
+
+/* ******************************************************************************** */
+/* [Map Marker]: ship */
+.map-marker_ship-info {
+    color: rgb(255, 255, 255);
+    text-align: left;  /* works if label has multiple lines */
+}
+#map-marker_ship-popup {
+    background-color: rgba(0, 0, 0, 0.8); /* black, 50% transparent */
+    border-radius: 8px;                     /* optional, rounded corners */
+    padding: 8px;                           /* optional, inner padding */
+}
+/* ******************************************************************************** */

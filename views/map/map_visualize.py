@@ -12,10 +12,10 @@ import urllib.request
 from utils.path import utils_path_get_asset
 
 from utils.log import utils_log_get_logger
-LOG_INFO  = utils_log_get_logger("map_view")["info"]
-LOG_DEBUG = utils_log_get_logger("map_view")["debug"]
-LOG_WARN  = utils_log_get_logger("map_view")["warn"]
-LOG_ERR   = utils_log_get_logger("map_view")["err"]
+LOG_INFO  = utils_log_get_logger("map_visualize")["info"]
+LOG_DEBUG = utils_log_get_logger("map_visualize")["debug"]
+LOG_WARN  = utils_log_get_logger("map_visualize")["warn"]
+LOG_ERR   = utils_log_get_logger("map_visualize")["err"]
 
 TILE_SIZE = 256
 ZOOM = 16
@@ -99,15 +99,17 @@ class MapVisualize(Gtk.DrawingArea):
         if event.button != 1:
             return False  # Ignore other buttons
 
-        # Handle left-click: begin drag and register as click
-        self.map_state.dragging = True
-        self.map_state.drag_start_x = event.x
-        self.map_state.drag_start_y = event.y
-        self.start_offset_x = self.map_state.offset_x
-        self.start_offset_y = self.map_state.offset_y
-
-        # Also treat this as a click for coordinate detection
-        self.on_map_clicked(event.x, event.y)
+        if self.map_state.my_ship_marker.hit_test(event.x, event.y):
+            self.show_ship_info_popup(self.map_state.my_ship_marker)
+        else:
+            # Handle left-click: begin drag and register as click
+            self.map_state.dragging = True
+            self.map_state.drag_start_x = event.x
+            self.map_state.drag_start_y = event.y
+            self.start_offset_x = self.map_state.offset_x
+            self.start_offset_y = self.map_state.offset_y
+            # Also treat this as a click for coordinate detection
+            self.on_map_clicked(event.x, event.y)
 
         return True
 
@@ -220,18 +222,27 @@ class MapVisualize(Gtk.DrawingArea):
                     except Exception as e:
                         LOG_ERR(f"Error drawing tile {x},{y}: {e}")
 
-        # Draw real-time GPS location (not necessarily center of map)
+        # Draw real-time ship marker (instead of GPS pixbuf)
         if self.map_state.gps_loc_lat is not None and self.map_state.gps_loc_lon is not None:
-            gps_xtile, gps_ytile = self.deg2num(self.map_state.gps_loc_lat, self.map_state.gps_loc_lon, self.map_state.curr_zoom)
-            gps_px = round((gps_xtile - start_x) * TILE_SIZE + offset_x - self.map_state.gps_loc_pixbuf.get_width() / 2)
-            gps_py = round((gps_ytile - start_y) * TILE_SIZE + offset_y - self.map_state.gps_loc_pixbuf.get_height())
+            gps_xtile, gps_ytile = self.deg2num(
+                self.map_state.gps_loc_lat,
+                self.map_state.gps_loc_lon,
+                self.map_state.curr_zoom
+            )
+
+            gps_px = round((gps_xtile - start_x) * TILE_SIZE + offset_x)
+            gps_py = round((gps_ytile - start_y) * TILE_SIZE + offset_y)
 
             if 0 <= gps_px < width and 0 <= gps_py < height:
-                Gdk.cairo_set_source_pixbuf(ctx, self.map_state.gps_loc_pixbuf, gps_px, gps_py)
-                ctx.paint()
-                LOG_DEBUG(f"[✓] Draw GPS marker at ({gps_px}, {gps_py})")
+                # Update marker position
+                self.map_state.my_ship_marker.set_location(self.map_state.gps_loc_lat, self.map_state.gps_loc_lon)
+                # Draw marker at map coordinates
+                self.map_state.my_ship_marker.draw(ctx, gps_px, gps_py, center=True)
+
+                LOG_DEBUG(f"[✓] Draw ship marker '{self.map_state.my_ship_marker.name}' "
+                        f"at ({gps_px}, {gps_py}) heading={self.map_state.my_ship_marker.heading}")
             else:
-                LOG_DEBUG(f"[ ] GPS marker out of view: ({gps_px}, {gps_py})")
+                LOG_DEBUG(f"[ ] Ship marker out of view: ({gps_px}, {gps_py})")
 
     def deg2num(self, lat_deg, lon_deg, zoom):
         LOG_DEBUG(f"deg2num input -> lat: {lat_deg}, lon: {lon_deg}, zoom: {zoom}")
@@ -364,6 +375,41 @@ class MapVisualize(Gtk.DrawingArea):
     # ****************************************************************************************
 
     # ****************************************************************************************
+    # [My Ship Info Popup]
+    def show_ship_info_popup(self, ship_marker):
+        info = ship_marker.get_info_dict()
+        # If MapVisualize is added into multiple nested containers before it reaches MapView,
+        # get_parent() will only return the immediate parent, not the MapView overlay itself.
+        map_view = self.get_parent()
+
+        # Create popup content
+        popup_content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        popup_content.set_margin_top(10)
+        popup_content.set_margin_bottom(10)
+        popup_content.set_margin_start(10)
+        popup_content.set_margin_end(10)
+        popup_content.set_name("map-marker_ship-popup")
+
+        label = Gtk.Label(
+            label=f"{info['name']}\nLat: {info['lat']}\nLon: {info['lon']}\nHeading: {info['heading']}"
+        )
+        label.set_justify(Gtk.Justification.LEFT)
+        label.get_style_context().add_class("map-marker_ship-info")
+
+        close_btn = Gtk.Button(label="Close")
+        close_btn.connect("clicked", lambda btn: map_view.hide_common_popup())
+
+        popup_content.pack_start(label, False, False, 0)
+        popup_content.pack_start(close_btn, False, False, 0)
+
+        # Use MapView's common popup system
+        
+        if map_view:
+            map_view.show_common_popup(popup_content)
+
+    # ****************************************************************************************
+
+    # ****************************************************************************************
     # [API]
     # ----------------------------------------------------------------------------------------
     # [API: GPS location]
@@ -386,7 +432,7 @@ class MapVisualize(Gtk.DrawingArea):
         self.queue_draw()
         LOG_DEBUG(f"[✓] Map centered at GPS location: ({self.map_state.center_loc_lat:.6f}, {self.map_state.center_loc_lon:.6f})")
 
-    def curr_gps_location_update(self, lat, lon):
+    def curr_gps_location_update(self, lat, lon, heading_deg):
         """
         Update the map view to center on the specified latitude and longitude.
         """
@@ -398,8 +444,10 @@ class MapVisualize(Gtk.DrawingArea):
         self.map_state.gps_loc_lon = lon
         self.map_state.offset_x = 0
         self.map_state.offset_y = 0
+        self.map_state.my_ship_marker.set_location(self.map_state.gps_loc_lat, self.map_state.gps_loc_lon)
+        self.map_state.my_ship_marker.set_heading(heading_deg)  # or 0 if no heading
         self.queue_draw()
-        LOG_DEBUG(f"Center updated to: ({lat:.6f}, {lon:.6f})")
+        LOG_DEBUG(f"GPS location updated to: ({lat:.6f}, {lon:.6f})")
     # ----------------------------------------------------------------------------------------
 
     # ----------------------------------------------------------------------------------------
@@ -415,23 +463,56 @@ class MapVisualize(Gtk.DrawingArea):
     # [API: Simulator]
     def curr_gps_location_sim_start(self, interval_ms=1000):
         """
-        Start a simulated center location updater (moves east slightly every second).
+        Start a simulated GPS updater that moves within map bounds and changes heading.
         """
         self._simulator_running = True
         self._simulated_lat = self.map_state.gps_loc_lat
         self._simulated_lon = self.map_state.gps_loc_lon
+        self._simulated_heading = 0  # degrees, 0° = north
+
+        # Define bounding box (min/max lat/lon) around initial point
+        self._sim_bounds = {
+            "lat_min": self._simulated_lat - 0.01,
+            "lat_max": self._simulated_lat + 0.01,
+            "lon_min": self._simulated_lon - 0.01,
+            "lon_max": self._simulated_lon + 0.01,
+        }
 
         def simulate_tick():
             if not self._simulator_running:
-                return False  # stop timer
+                return False
 
-            # Simulate eastward movement
-            self._simulated_lon += 0.0001
-            self.update_center_location(self._simulated_lat, self._simulated_lon)
+            distance_deg = 0.0001  # step size
+            rad = math.radians(self._simulated_heading)
+            new_lat = self._simulated_lat + distance_deg * math.cos(rad)
+            new_lon = self._simulated_lon + distance_deg * math.sin(rad)
 
-            return True  # continue timer
+            # Bounce logic
+            if not (self._sim_bounds["lat_min"] <= new_lat <= self._sim_bounds["lat_max"]):
+                self._simulated_heading = (180 - self._simulated_heading) % 360
+                return True  # skip this tick, change direction
+
+            if not (self._sim_bounds["lon_min"] <= new_lon <= self._sim_bounds["lon_max"]):
+                self._simulated_heading = (-self._simulated_heading) % 360
+                return True  # skip this tick, change direction
+
+            # Apply new position
+            self._simulated_lat = new_lat
+            self._simulated_lon = new_lon
+
+            # Change heading slightly each tick
+            self._simulated_heading = (self._simulated_heading + 5) % 360
+
+            self.curr_gps_location_update(
+                self._simulated_lat,
+                self._simulated_lon,
+                self._simulated_heading
+            )
+
+            return True
 
         GLib.timeout_add(interval_ms, simulate_tick)
+
 
     def curr_gps_location_sim_stop(self):
         """
@@ -454,6 +535,9 @@ class MapVisualize(Gtk.DrawingArea):
         """
 
         valid = True
+
+        # Force to stop simulation for gps update with heading change also.
+        self.curr_gps_location_sim_stop()
 
         # --- Validate tile path ---
         if tile_base_path:
@@ -528,6 +612,9 @@ class MapVisualize(Gtk.DrawingArea):
             self.queue_draw()
 
             LOG_DEBUG("[✓] update_extent applied")
+
+            # Start simulation for gps update with heading change also.
+            self.curr_gps_location_sim_start()
         else:
             LOG_WARN("[✗] update_extent aborted due to invalid parameters")
     # ----------------------------------------------------------------------------------------

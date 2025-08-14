@@ -36,6 +36,21 @@ class MapView(Gtk.Overlay):
         # ----------------------------------------------------------------------------------------
 
         # ----------------------------------------------------------------------------------------
+        # [Common Popup]
+        # Create a placeholder for the common popup (hidden by default)
+        # The content can be my ship info, points info, polygon info, ...
+        # The popup can be trigger on clicked on object.
+        self.common_popup_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.common_popup_box.set_halign(Gtk.Align.CENTER)
+        self.common_popup_box.set_valign(Gtk.Align.CENTER)
+        self.common_popup_box.set_margin_bottom(20)
+        self.common_popup_box.set_visible(False)  # hide initially
+        self.add_overlay(self.common_popup_box)
+        # Keep track of popup content
+        self._popup_content = None
+        # ----------------------------------------------------------------------------------------
+
+        # ----------------------------------------------------------------------------------------
         # [Button: zoom in]
         self.btn_zoom_in = Gtk.Button()
         self.btn_zoom_in.set_size_request(BTN_SIZE, BTN_SIZE)
@@ -145,7 +160,7 @@ class MapView(Gtk.Overlay):
         self.info_label.set_valign(Gtk.Align.END)
         self.info_label.set_margin_start(MARGIN_BASE)
         self.info_label.set_margin_top(MARGIN_BASE)
-        self.info_label.get_style_context().add_class("map-info-label")
+        self.info_label.get_style_context().add_class("map_info_label")
         self.add_overlay(self.info_label)
         # if map_visualize has signals/events for view changes, connect them:
         self.map_visualize.connect("view-changed", lambda *a: self.update_info_label())
@@ -154,7 +169,7 @@ class MapView(Gtk.Overlay):
         # ----------------------------------------------------------------------------------------
         # Initial update
         self.update_info_label()
-        # # Start simulation (e.g. in your main view init)
+        # Start simulation (e.g. in your main view init)
         # self.map_visualize.curr_gps_location_sim_start(interval_ms=1000)
         # ----------------------------------------------------------------------------------------
     # ********************************************************************************************
@@ -210,5 +225,24 @@ class MapView(Gtk.Overlay):
         zoom = self.map_visualize.zoom_level_get_curr_value()
         center_lat, center_lon = self.map_visualize.curr_center_location_get()
         self.info_label.set_text(f"[{center_lat:.6f}, {center_lon:.6f}] [{zoom}]")
+    # ********************************************************************************************
 
+    # ********************************************************************************************
+    # [Common Popup Methods]
+    def show_common_popup(self, content_widget):
+        """Show a reusable popup with given content widget."""
+        # Remove previous content
+        if self._popup_content:
+            self.common_popup_box.remove(self._popup_content)
+
+        self._popup_content = content_widget
+        self.common_popup_box.pack_start(content_widget, False, False, 0)
+        self.common_popup_box.show_all()
+
+    def hide_common_popup(self, *_):
+        """Hide and clear popup."""
+        if self._popup_content:
+            self.common_popup_box.remove(self._popup_content)
+            self._popup_content = None
+        self.common_popup_box.set_visible(False)
     # ********************************************************************************************
