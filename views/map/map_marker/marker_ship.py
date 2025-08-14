@@ -1,9 +1,12 @@
 import math
-from gi.repository import GdkPixbuf, Gdk
+import gi
+import cairo
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, Gdk, GdkPixbuf
 
 class MapMarkerShip:
     def __init__(self, image_path, size=24, name="My Ship"):
-        self.original_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(image_path, size, size)
+        self.pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(image_path, size, size)
         self.lat = 0.0
         self.lon = 0.0
         self.heading = 0  # 0° = north
@@ -20,33 +23,45 @@ class MapMarkerShip:
         self.heading = heading_deg % 360
 
     def draw(self, ctx, px, py, center=True):
-        """Draw the ship marker with smooth rotation."""
+        """Draw the ship marker with smooth rotation and a label above it."""
+
+        if self.pixbuf is None:
+            return
+
         if center:
-            px -= self.original_pixbuf.get_width() / 2
-            py -= self.original_pixbuf.get_height() / 2
+            px -= self.pixbuf.get_width() / 2
+            py -= self.pixbuf.get_height() / 2
 
         # Store bounds for hit detection
         self.last_draw_bounds = (px, py,
-                                 self.original_pixbuf.get_width(),
-                                 self.original_pixbuf.get_height())
+                                self.pixbuf.get_width(),
+                                self.pixbuf.get_height())
 
+        # Draw the pixbuf with rotation
         ctx.save()
-
-        # Translate to ship center for rotation
-        cx = px + self.original_pixbuf.get_width() / 2
-        cy = py + self.original_pixbuf.get_height() / 2
+        cx = px + self.pixbuf.get_width() / 2
+        cy = py + self.pixbuf.get_height() / 2
         ctx.translate(cx, cy)
-
-        # Rotate counterclockwise for Cairo (negative for clockwise heading)
         ctx.rotate(math.radians(-self.heading))
-
-        # Draw with top-left corner adjusted after rotation
-        Gdk.cairo_set_source_pixbuf(ctx, self.original_pixbuf,
-                                    -self.original_pixbuf.get_width() / 2,
-                                    -self.original_pixbuf.get_height() / 2)
+        Gdk.cairo_set_source_pixbuf(ctx, self.pixbuf,
+                                    -self.pixbuf.get_width() / 2,
+                                    -self.pixbuf.get_height() / 2)
         ctx.paint()
-
         ctx.restore()
+
+        # Draw the ship name above the pixbuf
+        if self.name:
+            ctx.save()
+            ctx.select_font_face("Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+            ctx.set_font_size(12)
+            ctx.set_source_rgb(0, 0, 0)  # black color
+            text_extents = ctx.text_extents(self.name)
+            text_x = cx - text_extents.width / 2
+            text_y = cy - self.pixbuf.get_height() / 2 - 5  # 5px above the pixbuf
+            ctx.move_to(text_x, text_y)
+            ctx.show_text(self.name)
+            ctx.restore()
+
 
     def hit_test(self, click_x, click_y):
         """Check if click is inside marker bounds (no rotation check for simplicity)."""
