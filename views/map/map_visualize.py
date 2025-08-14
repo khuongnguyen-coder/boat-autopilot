@@ -30,6 +30,9 @@ from views.map.map_state import MapState
 G_TILE_EMPTY = "empty.png"
 
 class MapVisualize(Gtk.DrawingArea):
+
+    # ****************************************************************************************
+    # [INIT]
     def __init__(self):
         super().__init__()
         LOG_DEBUG("MapVisualize init started")
@@ -46,6 +49,7 @@ class MapVisualize(Gtk.DrawingArea):
             Gdk.EventMask.BUTTON_RELEASE_MASK |
             Gdk.EventMask.POINTER_MOTION_MASK |
             Gdk.EventMask.STRUCTURE_MASK |
+            Gdk.EventMask.SCROLL_MASK |
             Gdk.EventMask.EXPOSURE_MASK
         )
 
@@ -53,13 +57,24 @@ class MapVisualize(Gtk.DrawingArea):
         self.connect("button-press-event", self.on_button_press)
         self.connect("motion-notify-event", self.on_motion_notify)
         self.connect("button-release-event", self.on_button_release)
+        self.connect("scroll-event", self.on_scroll)
 
         # self.set_size_request(800, 600)
 
         self.map_state = MapState(MY_LOCATION_LON, MY_LOCATION_LAT, (6, 19))
+
+         # async tile loading state
+        self.tiles_lock = threading.Lock()         # protects access to self.map_state.tiles
+        self.loading_keys = set()                  # keys currently being loaded (avoid duplicate workers)
+        self.empty_pixbuf = GdkPixbuf.Pixbuf.new_from_file(
+            utils_path_get_asset("tiles", G_TILE_EMPTY)
+        )
         
         LOG_DEBUG("MapVisualize init done")
+    # ****************************************************************************************
 
+    # ****************************************************************************************
+    # [EVENT HANDLER]
     def on_button_press(self, widget, event):
         LOG_DEBUG(f"on_button_press: {event.x}, {event.y}, button={event.button}")
         
@@ -80,20 +95,17 @@ class MapVisualize(Gtk.DrawingArea):
         return True
 
     def on_scroll(self, widget, event):
-        old_zoom = self.map_state.curr_zoom
-
-        if event.direction == Gdk.ScrollDirection.UP:
-            self.map_state.curr_zoom = min(self.map_state.curr_zoom + 1, self.map_state.zoom_range[1])  # limit zoom max
+        if event.direction == Gdk.ScrollDirection.SMOOTH:
+            if event.delta_y < 0:
+                self.zoom_level_increase()
+            elif event.delta_y > 0:
+                self.zoom_level_decrease()
+        elif event.direction == Gdk.ScrollDirection.UP:
+            self.zoom_level_increase()
         elif event.direction == Gdk.ScrollDirection.DOWN:
-            self.map_state.curr_zoom = max(self.map_state.curr_zoom - 1, self.map_state.zoom_range[0])   # limit zoom min
-        else:
-            return False
-
-        LOG_DEBUG(f"Zoom changed: {old_zoom} → {self.map_state.curr_zoom}")
-
-        self.map_state.tiles.clear()  # clear cached tiles to reload
-        self.queue_draw()
+            self.zoom_level_decrease()
         return True
+
 
     def on_motion_notify(self, widget, event):
         if self.map_state.dragging:
@@ -140,7 +152,10 @@ class MapVisualize(Gtk.DrawingArea):
         self.map_state.last_clicked_pos = (lat, lon)
         LOG_DEBUG(f"Clicked at pixel ({x:.0f}, {y:.0f}) => Coordinates: ({lat:.6f}, {lon:.6f})")
         self.queue_draw()
+    # ****************************************************************************************
 
+    # ****************************************************************************************
+    # [DRAW METHOD]
     def on_draw(self, widget, ctx):
         # LOG_DEBUG("on_draw called")
         width = self.get_allocated_width()
@@ -172,9 +187,15 @@ class MapVisualize(Gtk.DrawingArea):
                 if tile_path:
                     try:
                         key = f"{self.map_state.curr_zoom}/{x}/{y}"
-                        if key not in self.map_state.tiles:
-                            self.map_state.tiles[key] = GdkPixbuf.Pixbuf.new_from_file(tile_path)
-                        pixbuf = self.map_state.tiles[key]
+
+                        # Try to get from memory cache
+                        pixbuf = self._get_cached_tile(key)
+
+                        if pixbuf is None:
+                            # Not cached yet → show placeholder and load in background
+                            pixbuf = self.empty_pixbuf
+                            self.queue_tile_load(key, tile_path)
+
                         draw_x = round(i * TILE_SIZE + offset_x)
                         draw_y = round(j * TILE_SIZE + offset_y)
                         Gdk.cairo_set_source_pixbuf(ctx, pixbuf, draw_x, draw_y)
@@ -269,50 +290,67 @@ class MapVisualize(Gtk.DrawingArea):
 
         # LOG_DEBUG(f"tile_path: {tile_path}")
         return tile_path
+    # ****************************************************************************************
 
-    def set_zoom(self, new_zoom):
-        new_zoom = max(self.map_state.zoom_range[0], min(new_zoom, self.map_state.zoom_range[1]))
-        if new_zoom != self.map_state.curr_zoom:
-            self.map_state.curr_zoom = new_zoom
-            self.map_state.tiles.clear()
-            self.queue_draw()
-            LOG_DEBUG(f"Zoom set to {self.map_state.curr_zoom}")
+    # ****************************************************************************************
+    # [ASYN LOADING]
+    def _is_tile_cached(self, key):
+        with self.tiles_lock:
+            return key in self.map_state.tiles
 
-    def set_zoom_in(self):
-        LOG_DEBUG(f"Zoom range: [{self.map_state.zoom_range[0]}, {self.map_state.zoom_range[1]}]")
-        new_zoom = min(self.map_state.curr_zoom + 1, self.map_state.zoom_range[1])
-        
-        if new_zoom != self.map_state.curr_zoom:
-            self.map_state.curr_zoom = new_zoom
-            self.map_state.tiles.clear()
-            self.queue_draw()
-            LOG_DEBUG(f"Zoom in (set to {self.map_state.curr_zoom})")
+    def _get_cached_tile(self, key):
+        with self.tiles_lock:
+            return self.map_state.tiles.get(key)
 
+    def _set_cached_tile(self, key, pixbuf):
+        with self.tiles_lock:
+            self.map_state.tiles[key] = pixbuf
 
-    def set_zoom_out(self):
-        LOG_DEBUG(f"Zoom range: [{self.map_state.zoom_range[0]}, {self.map_state.zoom_range[1]}]")
-        
-        # Giảm zoom xuống 1, nhưng không nhỏ hơn zoom tối thiểu
-        new_zoom = max(self.map_state.curr_zoom - 1, self.map_state.zoom_range[0])
-        
-        if new_zoom != self.map_state.curr_zoom:
-            self.map_state.curr_zoom = new_zoom
-            self.map_state.tiles.clear()
-            self.queue_draw()
-            LOG_DEBUG(f"Zoom out (set to {self.map_state.curr_zoom})")
+    def queue_tile_load(self, key, tile_path):
+        """
+        Schedule a background load for a tile if it's not cached and not already loading.
+        """
+        if self._is_tile_cached(key):
+            return
+        with self.tiles_lock:
+            if key in self.loading_keys:
+                return
+            self.loading_keys.add(key)
 
+        # Start background worker
+        t = threading.Thread(target=self._tile_loader_thread, args=(key, tile_path), daemon=True)
+        t.start()
 
-    # def go_my_location(self):
-    #     self.map_state.center_loc_lat = self.map_state.gps_loc_lat
-    #     self.map_state.center_loc_lon = self.map_state.gps_loc_lon
-    #     self.map_state.offset_x = 0
-    #     self.map_state.offset_y = 0
-    #     self.map_state.curr_zoom = self.map_state.curr_zoom
-    #     self.map_state.tiles.clear()
-    #     self.queue_draw()
-    #     LOG_DEBUG(f"Centered map at my location: ({self.map_state.center_loc_lat}, {self.map_state.center_loc_lon})")
+    def _tile_loader_thread(self, key, tile_path):
+        """
+        Worker thread: load tile from disk, then hand-off to GTK main loop.
+        """
+        try:
+            # Loading GdkPixbuf in a thread is generally fine if we only touch GTK in the main thread.
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(tile_path) if os.path.exists(tile_path) else self.empty_pixbuf
+        except Exception as e:
+            LOG_ERR(f"[tile_loader] Failed to load {tile_path}: {e}")
+            pixbuf = self.empty_pixbuf
 
-    def go_my_location(self):
+        # Install into cache and trigger redraw on GTK main thread
+        GLib.idle_add(self._store_loaded_tile, key, pixbuf)
+
+    def _store_loaded_tile(self, key, pixbuf):
+        """
+        Runs on GTK main thread. Commit loaded pixbuf, clear 'loading' flag, and redraw.
+        """
+        self._set_cached_tile(key, pixbuf)
+        with self.tiles_lock:
+            self.loading_keys.discard(key)
+        self.queue_draw()
+        return False  # remove this idle handler
+    # ****************************************************************************************
+
+    # ****************************************************************************************
+    # [API]
+    # ----------------------------------------------------------------------------------------
+    # [API: GPS location]
+    def curr_gps_location_force(self):
         """
         Center the map on the current GPS location.
         """
@@ -331,14 +369,7 @@ class MapVisualize(Gtk.DrawingArea):
         self.queue_draw()
         LOG_DEBUG(f"[✓] Map centered at GPS location: ({self.map_state.center_loc_lat:.6f}, {self.map_state.center_loc_lon:.6f})")
 
-
-    def get_center_location(self):
-        """
-        Returns the current center location of the map as a (lat, lon) tuple.
-        """
-        return (self.map_state.center_loc_lat, self.map_state.center_loc_lon)
-
-    def update_gps_location(self, lat, lon):
+    def curr_gps_location_update(self, lat, lon):
         """
         Update the map view to center on the specified latitude and longitude.
         """
@@ -352,8 +383,11 @@ class MapVisualize(Gtk.DrawingArea):
         self.map_state.offset_y = 0
         self.queue_draw()
         LOG_DEBUG(f"Center updated to: ({lat:.6f}, {lon:.6f})")
+    # ----------------------------------------------------------------------------------------
 
-    def start_center_location_simulator(self, interval_ms=1000):
+    # ----------------------------------------------------------------------------------------
+    # [API: Simulator]
+    def curr_gps_location_sim_start(self, interval_ms=1000):
         """
         Start a simulated center location updater (moves east slightly every second).
         """
@@ -373,12 +407,15 @@ class MapVisualize(Gtk.DrawingArea):
 
         GLib.timeout_add(interval_ms, simulate_tick)
 
-    def stop_center_location_simulator(self):
+    def curr_gps_location_sim_stop(self):
         """
         Stop the simulated center location updates.
         """
         self._simulator_running = False
+    # ----------------------------------------------------------------------------------------
 
+    # ----------------------------------------------------------------------------------------
+    # [API: Entent]
     def update_extent(self, tile_base_path=None, center_lat=None, center_lon=None, zoom_range=None):
         """
         Update the map's extent, tile source, and zoom level — only if all parameters are valid.
@@ -467,23 +504,49 @@ class MapVisualize(Gtk.DrawingArea):
             LOG_DEBUG("[✓] update_extent applied")
         else:
             LOG_WARN("[✗] update_extent aborted due to invalid parameters")
+    # ----------------------------------------------------------------------------------------
+
+    # ----------------------------------------------------------------------------------------
+    # [API: ZOOM HANDLER]
+    def zoom_level_increase(self):
+        LOG_DEBUG(f"Zoom range: [{self.map_state.zoom_range[0]}, {self.map_state.zoom_range[1]}]")
+        new_zoom = min(self.map_state.curr_zoom + 1, self.map_state.zoom_range[1])
+        
+        if new_zoom != self.map_state.curr_zoom:
+            self.map_state.curr_zoom = new_zoom
+            self.map_state.tiles.clear()
+            self.queue_draw()
+            LOG_DEBUG(f"Zoom in (set to {self.map_state.curr_zoom})")
 
 
-
-    def handler_pan_up(self):
+    def zoom_level_decrease(self):
+        LOG_DEBUG(f"Zoom range: [{self.map_state.zoom_range[0]}, {self.map_state.zoom_range[1]}]")
+        new_zoom = max(self.map_state.curr_zoom - 1, self.map_state.zoom_range[0])
+        
+        if new_zoom != self.map_state.curr_zoom:
+            self.map_state.curr_zoom = new_zoom
+            self.map_state.tiles.clear()
+            self.queue_draw()
+            LOG_DEBUG(f"Zoom out (set to {self.map_state.curr_zoom})")
+    # ----------------------------------------------------------------------------------------
+        
+    # ----------------------------------------------------------------------------------------
+    # [API: PAN BUTTON HANDLER]
+    def pan_handler_up(self):
         self.map_state.offset_y += 100
         self.queue_draw()
     
-    def handler_pan_down(self):
+    def pan_handler_down(self):
         self.map_state.offset_y -= 100
         self.queue_draw()
     
-    def handler_pan_left(self):
+    def pan_handler_left(self):
         self.map_state.offset_x += 100
         self.queue_draw()
 
-    def handler_pan_right(self):
+    def pan_handler_right(self):
         self.map_state.offset_x -= 100
         self.queue_draw()
-
+    # ----------------------------------------------------------------------------------------
+    # ****************************************************************************************
 

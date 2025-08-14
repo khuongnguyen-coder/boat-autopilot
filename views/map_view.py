@@ -105,7 +105,7 @@ class MapView(Gtk.Overlay):
         self.btn_right.set_always_show_image(True)
 
         # Start simulation (e.g. in your main view init)
-        # self.map_visualize.start_center_location_simulator(interval_ms=1000)
+        # self.map_visualize.curr_gps_location_sim_start(interval_ms=1000)
     
     def make_arrow_button(self, arrow_type, tooltip, callback, margin_bottom, margin_end):
         btn = Gtk.Button()
@@ -124,27 +124,27 @@ class MapView(Gtk.Overlay):
         return btn
 
     def on_zoom_in(self, button):
-        self.map_visualize.set_zoom_in()
+        self.map_visualize.zoom_level_increase()
 
     def on_zoom_out(self, button):
-        self.map_visualize.set_zoom_out()
+        self.map_visualize.zoom_level_decrease()
     
     def on_pan_up(self, button):
-        self.map_visualize.handler_pan_up()
+        self.map_visualize.pan_handler_up()
 
     def on_pan_down(self, button):
-        self.map_visualize.handler_pan_down()
+        self.map_visualize.pan_handler_down()
 
     def on_pan_left(self, button):
-        self.map_visualize.handler_pan_left()
+        self.map_visualize.pan_handler_left()
 
     def on_pan_right(self, button):
-        self.map_visualize.handler_pan_right()
+        self.map_visualize.pan_handler_right()
 
     def on_my_location(self, button):
-        self.map_visualize.go_my_location()
+        self.map_visualize.curr_gps_location_force()
 
     def stop(self):
         # Stop simulation later if needed
-        self.map_visualize.stop_center_location_simulator()
+        # self.map_visualize.curr_gps_location_sim_stop()
         LOG_DEBUG(f"[STOP] Map view stopped.")
