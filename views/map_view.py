@@ -11,14 +11,20 @@ LOG_WARN  = utils_log_get_logger("map_view")["warn"]
 LOG_ERR   = utils_log_get_logger("map_view")["err"]
 
 class MapView(Gtk.Overlay):
+
+    # ********************************************************************************************
+    # [INIT]
     def __init__(self, _map_visualize):
         super().__init__()
-        # 📍 Add the map view first
-        # self.map_visualize = MapVisualize()
+
+        # ----------------------------------------------------------------------------------------
+        # [Map view]
         self.map_visualize = _map_visualize
         self.add(self.map_visualize)
+        # ----------------------------------------------------------------------------------------
 
-        # ➕ Zoom In button
+        # ----------------------------------------------------------------------------------------
+        # [Button: zoom in]
         self.btn_zoom_in = Gtk.Button()
         self.btn_zoom_in.set_size_request(64, 64)
         # Load the zoom in icon from resources
@@ -40,7 +46,8 @@ class MapView(Gtk.Overlay):
         self.btn_zoom_in.connect("clicked", self.on_zoom_in)
         self.add_overlay(self.btn_zoom_in)
 
-        # ➖ Zoom Out button
+        # ----------------------------------------------------------------------------------------
+        # [Button: zoom out]
         self.btn_zoom_out = Gtk.Button()
         self.btn_zoom_out.set_size_request(64, 64)
         # Load the zoom out icon from resources
@@ -61,8 +68,10 @@ class MapView(Gtk.Overlay):
         # Connect the button click event to the zoom out method
         self.btn_zoom_out.connect("clicked", self.on_zoom_out)
         self.add_overlay(self.btn_zoom_out)
+        # ----------------------------------------------------------------------------------------
 
-        # ➖ My location button
+        # ----------------------------------------------------------------------------------------
+        # [Button: My location]
         self.btn_my_location = Gtk.Button()
         self.btn_my_location.set_size_request(64, 64)
         # Load the my location icon from resources
@@ -83,30 +92,56 @@ class MapView(Gtk.Overlay):
         # Connect the button click event to the my location method
         self.btn_my_location.connect("clicked", self.on_my_location)
         self.add_overlay(self.btn_my_location)
+        # ----------------------------------------------------------------------------------------
 
+        # ----------------------------------------------------------------------------------------
+        # [Button: Go up]
         self.btn_up = self.make_arrow_button("up", "Pan Up", self.on_pan_up, 10, 258)
         img = Gtk.Image.new_from_resource("/vn/vnest/autopilot/ui/assets/map/map_arrow_up.png")
         self.btn_up.set_image(img)
         self.btn_up.set_always_show_image(True)
+        # ----------------------------------------------------------------------------------------
 
+        # ----------------------------------------------------------------------------------------
+        # [Button: Go down]
         self.btn_down = self.make_arrow_button("down", "Pan Down", self.on_pan_down, 10, 174)
         img = Gtk.Image.new_from_resource("/vn/vnest/autopilot/ui/assets/map/map_arrow_down.png")
         self.btn_down.set_image(img)
         self.btn_down.set_always_show_image(True)
+        # ----------------------------------------------------------------------------------------
 
+        # ----------------------------------------------------------------------------------------
+        # [Button: Go left]
         self.btn_left = self.make_arrow_button("left", "Pan Left", self.on_pan_left, 10, 332)
         img = Gtk.Image.new_from_resource("/vn/vnest/autopilot/ui/assets/map/map_arrow_left.png")
         self.btn_left.set_image(img)
         self.btn_left.set_always_show_image(True)
+        # ----------------------------------------------------------------------------------------
 
+        # ----------------------------------------------------------------------------------------
+        # [Button: Go right]
         self.btn_right = self.make_arrow_button("right", "Pan Right", self.on_pan_right, 10, 94)
         img = Gtk.Image.new_from_resource("/vn/vnest/autopilot/ui/assets/map/map_arrow_right.png")
         self.btn_right.set_image(img)
         self.btn_right.set_always_show_image(True)
+        # ----------------------------------------------------------------------------------------
 
+        # ----------------------------------------------------------------------------------------
         # Start simulation (e.g. in your main view init)
         # self.map_visualize.curr_gps_location_sim_start(interval_ms=1000)
+        # ----------------------------------------------------------------------------------------
+    # ********************************************************************************************
     
+    # ********************************************************************************************
+    # [STOP]
+    def stop(self):
+        # Stop simulation later if needed
+        # self.map_visualize.curr_gps_location_sim_stop()
+        LOG_DEBUG(f"[STOP] Map view stopped.")
+    # ********************************************************************************************
+
+    # ********************************************************************************************
+    # [Callback handler]
     def make_arrow_button(self, arrow_type, tooltip, callback, margin_bottom, margin_end):
         btn = Gtk.Button()
         btn.set_size_request(64, 64)
@@ -143,8 +178,4 @@ class MapView(Gtk.Overlay):
 
     def on_my_location(self, button):
         self.map_visualize.curr_gps_location_force()
-
-    def stop(self):
-        # Stop simulation later if needed
-        # self.map_visualize.curr_gps_location_sim_stop()
-        LOG_DEBUG(f"[STOP] Map view stopped.")
+    # ********************************************************************************************

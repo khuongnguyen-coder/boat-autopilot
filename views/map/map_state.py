@@ -11,7 +11,6 @@ class MapState:
         # Current location (map center in lat/lon)
         self.center_loc_lat = _center_lat       # float: Current latitude (map center)
         self.center_loc_lon = _center_lot       # float: Current longitude (map center)
-        # center_pixbuf_path = utils_path_get_asset("map", "marker.png")
         # self.center_loc_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(center_pixbuf_path, 24, 24)
 
         self.gps_loc_lat = _center_lat                 # float: GPS latitude

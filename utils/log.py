@@ -45,6 +45,7 @@ def _write(msg: str, level: str, tag: str = "core"):
         buf = _log_view.get_buffer()
         buf.insert(buf.get_end_iter(), formatted + "\n")
 
+# ********************************************************************************************
 # Public API
 def debug(msg: str, tag: str = "core"):
     if _should_log("DEBUG"):
@@ -72,3 +73,4 @@ def utils_log_get_logger(tag: str):
         "warn": lambda msg: warn(msg, tag),
         "err": lambda msg: err(msg, tag),
     }
+# ********************************************************************************************

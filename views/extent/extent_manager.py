@@ -16,6 +16,7 @@ LOG_ERR   = utils_log_get_logger("map_view")["err"]
 from config import VNEST_AUTOPILOT_DATABASE_PATH
 from views.extent.enc_metadata import EncMetadata, BoundingBox, Center, ZoomRange
 
+# ********************************************************************************************
 class ExtentManager:
     def __init__(self):
         super().__init__()
@@ -50,7 +51,9 @@ class ExtentManager:
 
         LOG_DEBUG(f"location_list: {location_list}")
         return location_list
+# ********************************************************************************************
 
+# ********************************************************************************************
 def load_all_metadata(root_dir):
     metadata_list = []
 
@@ -84,3 +87,4 @@ def load_all_metadata(root_dir):
                     print(f"[!] Failed to load {full_path}: {e}")
     
     return metadata_list
+# ********************************************************************************************

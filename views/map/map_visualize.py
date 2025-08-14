@@ -67,7 +67,7 @@ class MapVisualize(Gtk.DrawingArea):
         self.tiles_lock = threading.Lock()         # protects access to self.map_state.tiles
         self.loading_keys = set()                  # keys currently being loaded (avoid duplicate workers)
         self.empty_pixbuf = GdkPixbuf.Pixbuf.new_from_file(
-            utils_path_get_asset("tiles", G_TILE_EMPTY)
+            utils_path_get_asset("map", G_TILE_EMPTY)
         )
         
         LOG_DEBUG("MapVisualize init done")

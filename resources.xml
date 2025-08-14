@@ -8,6 +8,7 @@
     <file>ui/assets/icons/tab_notification_48.png</file>
     <file>ui/assets/icons/tab_settings_48.png</file>
     <file>ui/assets/icons/tab_wheel_48.png</file>
+    <file>ui/assets/map/empty.png</file>
     <file>ui/assets/map/map_arrow_down.png</file>
     <file>ui/assets/map/map_arrow_left.png</file>
     <file>ui/assets/map/map_arrow_right.png</file>
@@ -15,7 +16,6 @@
     <file>ui/assets/map/map_my_location.png</file>
     <file>ui/assets/map/map_zoon_in.png</file>
     <file>ui/assets/map/map_zoon_out.png</file>
-    <file>ui/assets/map/marker.png</file>
     <file>ui/assets/map/ship.png</file>
     <file>ui/css/style.css</file>
   </gresource>
