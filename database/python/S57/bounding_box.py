@@ -155,7 +155,7 @@ def bounding_box_zoom_range() -> dict:
         dict: Dictionary with 'min' and 'max' zoom levels
     """
     return {
-        "min": 6,
+        "min": 10,
         "max": 19
     }
 

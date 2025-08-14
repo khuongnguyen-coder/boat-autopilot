@@ -21,3 +21,10 @@ button.map-button {
   border: none;
   box-shadow: none;
 }
+
+/* Zoom/Center info label at bottom-left */
+.map-info-label {
+  color: rgba(255, 51, 0, 0.5); /* 0.5 = 50% opacity */
+  font-size: 24px;
+  font-weight: bold;
+}

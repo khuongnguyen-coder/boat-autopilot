@@ -1,6 +1,6 @@
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
 
 import threading
 from gi.repository import GLib
@@ -30,6 +30,15 @@ from views.map.map_state import MapState
 G_TILE_EMPTY = "empty.png"
 
 class MapVisualize(Gtk.DrawingArea):
+
+    # ****************************************************************************************
+    # [Custom signal]
+    # Define a GObject signal to notify whenever the map view changes
+    __gsignals__ = {
+        # No arguments, just notifies that the view (center/zoom) changed
+        "view-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
+    }
+    # ****************************************************************************************
 
     # ****************************************************************************************
     # [INIT]
@@ -71,6 +80,14 @@ class MapVisualize(Gtk.DrawingArea):
         )
         
         LOG_DEBUG("MapVisualize init done")
+    # ****************************************************************************************
+
+    # ****************************************************************************************
+    # Override for queue_draw to add emit custom signal.
+    def queue_draw(self, *args, **kwargs):
+        """Queue a redraw and emit view-changed."""
+        super().queue_draw(*args, **kwargs)
+        self.emit("view-changed")
     # ****************************************************************************************
 
     # ****************************************************************************************
@@ -386,6 +403,15 @@ class MapVisualize(Gtk.DrawingArea):
     # ----------------------------------------------------------------------------------------
 
     # ----------------------------------------------------------------------------------------
+    # [API: Center location]
+    def curr_center_location_get(self):
+        """
+        Return current zoom level.
+        """
+        return self.map_state.center_loc_lat, self.map_state.center_loc_lon
+    # ----------------------------------------------------------------------------------------
+
+    # ----------------------------------------------------------------------------------------
     # [API: Simulator]
     def curr_gps_location_sim_start(self, interval_ms=1000):
         """
@@ -528,6 +554,13 @@ class MapVisualize(Gtk.DrawingArea):
             self.map_state.tiles.clear()
             self.queue_draw()
             LOG_DEBUG(f"Zoom out (set to {self.map_state.curr_zoom})")
+
+    def zoom_level_get_curr_value(self):
+        """
+        Return current zoom level.
+        """
+        return self.map_state.curr_zoom
+    # ----------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------
         
     # ----------------------------------------------------------------------------------------
