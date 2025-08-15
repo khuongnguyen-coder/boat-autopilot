@@ -65,6 +65,7 @@ class SettingView():
         # [Layer visibility checkbox]
         map_layer_visibility = _builder.get_object("map_layer_visibility_vewport")
         self.map_layer_visibility_table = MapLayerCheckboxTable()
+        self.map_layer_visibility_table.map_visualize_ref = self.map_visualize
         map_layer_visibility.add(self.map_layer_visibility_table)
         # ****************************************************************************************
 
@@ -89,5 +90,5 @@ class SettingView():
                 selected_metadata.geojson_dir
             )
             LOG_DEBUG(f"Selected GEOJSON dir: {geojson_dir}")
-            self.map_visualize.update_layers(geojson_dir, self.map_layer_visibility_table)
+            self.map_visualize.layers_update(geojson_dir, self.map_layer_visibility_table)
             

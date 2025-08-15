@@ -60,7 +60,11 @@ class MapLayerCheckboxTable(Gtk.Box):
         """Called when the user toggles a checkbox."""
         state = checkbox.get_active()
         self.curr_layers_dict[layer] = state
-        print(f"[TOGGLE] {layer} => {state}")
+        LOG_DEBUG(f"[TOGGLE] {layer} => {state}")
+
+        # Notify map that this layer's visibility changed
+        if hasattr(self, "map_visualize_ref") and self.map_visualize_ref:
+            self.map_visualize_ref.layers_visibility_toggle(layer, state)    
     
     def update_layers_config(self, layers_dict):
         self.curr_layers_dict = layers_dict

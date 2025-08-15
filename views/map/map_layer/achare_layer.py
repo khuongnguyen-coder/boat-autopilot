@@ -13,7 +13,8 @@ class ACHARELayer(GeoJSONLayer):
             line_color=line_color,
             line_width=line_width,
             fill_color=fill_color,
-            fill_opacity=fill_opacity
+            fill_opacity=fill_opacity,
+            layer_id="ACHARE"
         )
 
     def properties_str(self, props):

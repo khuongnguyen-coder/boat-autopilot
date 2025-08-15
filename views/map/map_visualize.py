@@ -738,7 +738,8 @@ class MapVisualize(Gtk.DrawingArea):
 
     # ----------------------------------------------------------------------------------------
     # [API: UPDATE LAYER]
-    def update_layers(self, geojson_path, comboxbox_table):
+    def layers_update(self, geojson_path, comboxbox_table):
+        self.current_geojson_dir = geojson_path
         active_layers = comboxbox_table.get_active_layers()
         LOG_DEBUG(f"Currently active layers: {active_layers}")
 
@@ -761,6 +762,32 @@ class MapVisualize(Gtk.DrawingArea):
                     LOG_DEBUG(f"Added layer: {layer_name} with style {layer_info}")
                 else:
                     LOG_WARN(f"GeoJSON file not found for {layer_name}: {geojson_file}")
+
+    def layers_visibility_toggle(self, layer_name, visible):
+        """Show or hide a layer by name."""
+        existing_layer = next((l for l in self.layers if getattr(l, "layer_id", None) == layer_name), None)
+
+        if visible:
+            if not existing_layer:
+                from views.map.map_layer.layer_factory import LAYER_CLASS_MAP
+                if layer_name in LAYER_CLASS_MAP:
+                    layer_info = LAYER_CLASS_MAP[layer_name]
+                    layer_class = layer_info["class"]
+                    geojson_file = os.path.join(self.current_geojson_dir, f"{layer_name}.geojson")
+                    if os.path.exists(geojson_file):
+                        layer_instance = layer_class(
+                            filepath=geojson_file,
+                            line_color=layer_info.get("line_color", (0, 0, 0)),
+                            line_width=layer_info.get("width", 2),
+                            fill_color=layer_info.get("fill_color"),
+                            fill_opacity=layer_info.get("fill_opacity", 0.3)
+                        )
+                        self.add_layer(layer_instance)
+        else:
+            if existing_layer:
+                self.remove_layer(existing_layer)
+
+        self.queue_draw()
 
 
     # ----------------------------------------------------------------------------------------

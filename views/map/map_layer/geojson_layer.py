@@ -5,7 +5,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk
 
 class GeoJSONLayer:
-    def __init__(self, filepath, title=None, line_color=(0, 0, 0), line_width=2, fill_color=None, fill_opacity=0.3):
+    def __init__(self, filepath, title=None, line_color=(0, 0, 0), line_width=2, fill_color=None, fill_opacity=0.3, layer_id=None):
         """
         Base class to load and render GeoJSON layers.
 
@@ -14,6 +14,7 @@ class GeoJSONLayer:
         :param line_color: RGB tuple (0-1 range)
         :param line_width: Stroke width in pixels
         """
+        self.layer_id = layer_id
         self.filepath = filepath
         self.title = title or filepath
         self.line_color = line_color
