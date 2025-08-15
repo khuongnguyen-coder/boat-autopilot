@@ -2,7 +2,7 @@ import gi
 import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Pango", "1.0")
-from gi.repository import Gtk, Pango
+from gi.repository import Gtk, Pango, Gdk
 
 from utils.log import utils_log_get_logger
 LOG_INFO  = utils_log_get_logger("map_view")["info"]
@@ -12,11 +12,14 @@ LOG_ERR   = utils_log_get_logger("map_view")["err"]
 
 from views.extent.extent_manager import ExtentManager
 from views.map.map_visualize import MapVisualize
+from views.map.map_layer_visibility import MapLayerCheckboxTable
 
 class SettingView():
     def __init__(self, _builder, _map_visualize):
         super().__init__()
 
+        # ****************************************************************************************
+        # [Extent Combobox]
         # Load elements from the builder using widget IDs
         self.map_extent_combobox = _builder.get_object("setting_map_extent_combobox")
         self.map_visualize = _map_visualize
@@ -52,17 +55,28 @@ class SettingView():
         self.map_extent_combobox.set_active(0)
 
         # Connect signal
-        self.map_extent_combobox.connect("changed", self.on_language_changed)
-    
-    def on_language_changed(self, combo):
+        self.map_extent_combobox.connect("changed", self.on_extent_changed)
+        # ****************************************************************************************
+
+        # ****************************************************************************************
+        # [Layer visibility checkbox]
+        map_layer_visibility = _builder.get_object("map_layer_visibility_vewport")
+        self.map_layer_visibility_table = MapLayerCheckboxTable()
+        map_layer_visibility.add(self.map_layer_visibility_table)
+        # ****************************************************************************************
+
+    def on_extent_changed(self, combo):
         model = combo.get_model()
         tree_iter = combo.get_active_iter()
         if tree_iter is not None:
             model = self.map_extent_combobox.get_model()
             selected_metadata = model[tree_iter][1]  # column 1 is EncMetadata object
             LOG_DEBUG(f"Selected ENC metadata: {selected_metadata.enc_name} : {selected_metadata.s57_path}")
-
+            # Update new extent data
             self.map_visualize.update_extent(selected_metadata.tile_dir,
                                             selected_metadata.center.lat,
                                             selected_metadata.center.lon,
                                             selected_metadata.zoom_range)
+            # Update layer visibility checkbox table
+            layers_data = selected_metadata.layers
+            self.map_layer_visibility_table.update_layers_config(layers_data)
