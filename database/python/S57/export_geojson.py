@@ -20,12 +20,14 @@ def __get_layer_names(s57_path, debug=False):
         ["ogrinfo", "-ro", "-q", s57_path],
         capture_output=True, text=True, check=True
     )
-    layers = []
+    
+    layers = {}
     for line in result.stdout.splitlines():
         if ":" in line:
             layer = line.split(":", 1)[1].split("(")[0].strip()
-            layers.append(layer)
-    __print_debug(f"Layers found: {layers}", debug)
+            layers[layer] = True  # default: visible
+
+    __print_debug(f"Layers found with flags: {layers}", debug)
     return layers
 
 def __export_layer_to_geojson(s57_path, layer_name, output_path, debug=False):
@@ -73,11 +75,12 @@ def export_geojson(s57_path, output_dir, debug: bool = False):
             print(f"  - {layer}")
         print()
 
-    for layer in layers:
-        __print_debug(f"Processing layer: {layer}", debug)
-        output_path = Path(output_dir) / layer
-        __export_layer_to_geojson(s57_path, layer, output_path, debug=debug)
+    for layer_name in layers.keys():
+        __print_debug(f"Processing layer: {layer_name}", debug)
+        output_path = Path(output_dir) / layer_name
+        __export_layer_to_geojson(s57_path, layer_name, output_path, debug=debug)
         __print_debug(f"Saved: {output_path.with_suffix('.geojson')}", debug)
+
 
     return layers
 
