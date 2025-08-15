@@ -60,7 +60,7 @@ class MapLayerCheckboxTable(Gtk.Box):
         """Called when the user toggles a checkbox."""
         state = checkbox.get_active()
         self.curr_layers_dict[layer] = state
-        LOG_DEBUG(f"[TOGGLE] {layer} => {state}")
+        print(f"[TOGGLE] {layer} => {state}")
     
     def update_layers_config(self, layers_dict):
         self.curr_layers_dict = layers_dict
@@ -84,3 +84,12 @@ class MapLayerCheckboxTable(Gtk.Box):
                 checkbox.set_sensitive(False)
 
             checkbox.handler_unblock(handler_id)  # unblock signal
+
+    def is_layer_active(self, layer):
+        """Return True if the given layer's checkbox is active."""
+        checkbox = self.checkboxes.get(layer)
+        return checkbox.get_active() if checkbox else False
+
+    def get_active_layers(self):
+        """Return a list of layers where the checkbox is active."""
+        return [layer for layer, cb in self.checkboxes.items() if cb.get_active()]

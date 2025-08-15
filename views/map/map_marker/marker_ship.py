@@ -77,3 +77,11 @@ class MapMarkerShip:
             "lon": self.lon,
             "heading": self.heading
         }
+
+    def get_info_str(self):
+        return (
+            f"{self.name}\n"
+            f"Lat: {self.lat:.6f}\n"
+            f"Lon: {self.lon:.6f}\n"
+            f"Heading: {self.heading:.1f}"
+        )

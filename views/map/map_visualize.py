@@ -26,6 +26,7 @@ MY_LOCATION_LON = 106.8317088
 from config import ENABLE_FEATURE_TILE_DOWNLOAD_RUNTIME
 from config import VNEST_AUTOPILOT_DATABASE_PATH
 from views.map.map_state import MapState
+from views.map.map_layer.layer_factory import LAYER_CLASS_MAP
 
 G_TILE_EMPTY = "empty.png"
 
@@ -51,6 +52,9 @@ class MapVisualize(Gtk.DrawingArea):
         self.set_can_focus(True)
         self.set_focus_on_click(True)
         self.set_app_paintable(True)
+
+        # store added layer objects
+        self.layers = []
 
         # Enable event masks
         self.add_events(
@@ -91,6 +95,25 @@ class MapVisualize(Gtk.DrawingArea):
     # ****************************************************************************************
 
     # ****************************************************************************************
+    # [LAYER HANDLER]
+    def add_layer(self, layer):
+        """Add a new map layer and redraw."""
+        self.layers.append(layer)
+        self.queue_draw()
+
+    def remove_layer(self, layer):
+        """Remove a map layer and redraw."""
+        if layer in self.layers:
+            self.layers.remove(layer)
+            self.queue_draw()
+
+    def clear_layers(self):
+        """Remove all layers."""
+        self.layers.clear()
+        self.queue_draw()
+    # ****************************************************************************************
+
+    # ****************************************************************************************
     # [EVENT HANDLER]
     def on_button_press(self, widget, event):
         LOG_DEBUG(f"on_button_press: {event.x}, {event.y}, button={event.button}")
@@ -99,8 +122,18 @@ class MapVisualize(Gtk.DrawingArea):
         if event.button != 1:
             return False  # Ignore other buttons
 
+        # Exec hit test for all layer 
+        for layer in self.layers:
+            if hasattr(layer, "hit_test"):
+                feature = layer.hit_test(event.x, event.y, self)
+                if feature:
+                    info_text = layer.properties_str(layer.get_properties(feature))
+                    self.show_ship_info_popup(info_text)
+                    return
+        
+        # Exec hit test for marker
         if self.map_state.my_ship_marker.hit_test(event.x, event.y):
-            self.show_ship_info_popup(self.map_state.my_ship_marker)
+            self.show_ship_info_popup(self.map_state.my_ship_marker.get_info_str())
         else:
             # Handle left-click: begin drag and register as click
             self.map_state.dragging = True
@@ -184,7 +217,7 @@ class MapVisualize(Gtk.DrawingArea):
         lon = self.map_state.center_loc_lon
         zoom = self.map_state.curr_zoom
 
-        LOG_DEBUG(f"*** on_draw -> center_lat: {lat}, center_lon: {lon}, curr_zoom: {zoom}")
+        # LOG_DEBUG(f"*** on_draw -> center_lat: {lat}, center_lon: {lon}, curr_zoom: {zoom}")
 
         center_x, center_y = self.deg2num(lat, lon, zoom)
 
@@ -239,13 +272,20 @@ class MapVisualize(Gtk.DrawingArea):
                 # Draw marker at map coordinates
                 self.map_state.my_ship_marker.draw(ctx, gps_px, gps_py, center=True)
 
-                LOG_DEBUG(f"[✓] Draw ship marker '{self.map_state.my_ship_marker.name}' "
-                        f"at ({gps_px}, {gps_py}) heading={self.map_state.my_ship_marker.heading}")
+                # LOG_DEBUG(f"[✓] Draw ship marker '{self.map_state.my_ship_marker.name}' "
+                #         f"at ({gps_px}, {gps_py}) heading={self.map_state.my_ship_marker.heading}")
             else:
                 LOG_DEBUG(f"[ ] Ship marker out of view: ({gps_px}, {gps_py})")
+        
+        # Draw all added layers
+        for layer in self.layers:
+            if hasattr(layer, "draw"):
+                layer.draw(ctx, self)
+            elif hasattr(layer, "render"):
+                layer.render(ctx, self)
 
     def deg2num(self, lat_deg, lon_deg, zoom):
-        LOG_DEBUG(f"deg2num input -> lat: {lat_deg}, lon: {lon_deg}, zoom: {zoom}")
+        # LOG_DEBUG(f"deg2num input -> lat: {lat_deg}, lon: {lon_deg}, zoom: {zoom}")
 
         # Clamp lat deg
         lat_deg = max(min(lat_deg, 85.0511), -85.0511)
@@ -271,6 +311,30 @@ class MapVisualize(Gtk.DrawingArea):
         lon_deg = xtile / n * 360.0 - 180.0
         lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * ytile / n)))
         return math.degrees(lat_rad), lon_deg
+
+    def lonlat_to_pixels(self, lon, lat):
+        """Convert lon/lat to pixel coordinates relative to the widget."""
+        width = self.get_allocated_width()
+        height = self.get_allocated_height()
+
+        # Map center in tile coordinates
+        center_x, center_y = self.deg2num(
+            self.map_state.center_loc_lat,
+            self.map_state.center_loc_lon,
+            self.map_state.curr_zoom
+        )
+
+        # Target point in tile coordinates
+        tile_x, tile_y = self.deg2num(lat, lon, self.map_state.curr_zoom)
+
+        # Convert to pixel offset from center
+        dx_tiles = tile_x - center_x
+        dy_tiles = tile_y - center_y
+
+        px = width / 2 + dx_tiles * 256 + self.map_state.offset_x
+        py = height / 2 + dy_tiles * 256 + self.map_state.offset_y
+
+        return px, py
 
     def query_tile(self, x, y, zoom):
         if x < 0 or y < 0 or x >= 2 ** zoom or y >= 2 ** zoom:
@@ -376,10 +440,15 @@ class MapVisualize(Gtk.DrawingArea):
 
     # ****************************************************************************************
     # [My Ship Info Popup]
-    def show_ship_info_popup(self, ship_marker):
-        info = ship_marker.get_info_dict()
+    def show_ship_info_popup(self, info_str):
+        """
+        Show an information popup on the map.
+        info_str: string with the information to display.
+        """
         # If MapVisualize is added into multiple nested containers before it reaches MapView,
         # get_parent() will only return the immediate parent, not the MapView overlay itself.
+
+        LOG_DEBUG(f"info_str: {info_str}")
         map_view = self.get_parent()
 
         # Create popup content
@@ -388,13 +457,11 @@ class MapVisualize(Gtk.DrawingArea):
         popup_content.set_margin_bottom(10)
         popup_content.set_margin_start(10)
         popup_content.set_margin_end(10)
-        popup_content.set_name("map-marker_ship-popup")
+        popup_content.set_name("popup-info-box")
 
-        label = Gtk.Label(
-            label=f"{info['name']}\nLat: {info['lat']}\nLon: {info['lon']}\nHeading: {info['heading']}"
-        )
+        label = Gtk.Label(label=info_str)
         label.set_justify(Gtk.Justification.LEFT)
-        label.get_style_context().add_class("map-marker_ship-info")
+        label.get_style_context().add_class("popup-info-label")
 
         close_btn = Gtk.Button(label="Close")
         close_btn.connect("clicked", lambda btn: map_view.hide_common_popup())
@@ -403,9 +470,9 @@ class MapVisualize(Gtk.DrawingArea):
         popup_content.pack_start(close_btn, False, False, 0)
 
         # Use MapView's common popup system
-        
         if map_view:
             map_view.show_common_popup(popup_content)
+
 
     # ****************************************************************************************
 
@@ -668,5 +735,35 @@ class MapVisualize(Gtk.DrawingArea):
         self.map_state.offset_x -= 100
         self.queue_draw()
     # ----------------------------------------------------------------------------------------
+
+    # ----------------------------------------------------------------------------------------
+    # [API: UPDATE LAYER]
+    def update_layers(self, geojson_path, comboxbox_table):
+        active_layers = comboxbox_table.get_active_layers()
+        LOG_DEBUG(f"Currently active layers: {active_layers}")
+
+        for layer_name in active_layers:
+            if layer_name in LAYER_CLASS_MAP:
+                layer_info = LAYER_CLASS_MAP[layer_name]
+                layer_class = layer_info["class"]
+
+                geojson_file = os.path.join(geojson_path, f"{layer_name}.geojson")
+
+                if os.path.exists(geojson_file):
+                    layer_instance = layer_class(
+                        filepath=geojson_file,
+                        line_color=layer_info.get("line_color", (0, 0, 0)),
+                        line_width=layer_info.get("width", 2),
+                        fill_color=layer_info.get("fill_color"),
+                        fill_opacity=layer_info.get("fill_opacity", 0.3)
+                    )
+                    self.add_layer(layer_instance)
+                    LOG_DEBUG(f"Added layer: {layer_name} with style {layer_info}")
+                else:
+                    LOG_WARN(f"GeoJSON file not found for {layer_name}: {geojson_file}")
+
+
+    # ----------------------------------------------------------------------------------------
+
     # ****************************************************************************************
 

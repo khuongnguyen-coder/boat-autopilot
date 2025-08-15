@@ -1,3 +1,4 @@
+import os
 import gi
 import gi
 gi.require_version("Gtk", "3.0")
@@ -9,6 +10,8 @@ LOG_INFO  = utils_log_get_logger("map_view")["info"]
 LOG_DEBUG = utils_log_get_logger("map_view")["debug"]
 LOG_WARN  = utils_log_get_logger("map_view")["warn"]
 LOG_ERR   = utils_log_get_logger("map_view")["err"]
+
+from config import VNEST_AUTOPILOT_DATABASE_PATH
 
 from views.extent.extent_manager import ExtentManager
 from views.map.map_visualize import MapVisualize
@@ -80,3 +83,11 @@ class SettingView():
             # Update layer visibility checkbox table
             layers_data = selected_metadata.layers
             self.map_layer_visibility_table.update_layers_config(layers_data)
+
+            geojson_dir = os.path.join(
+                VNEST_AUTOPILOT_DATABASE_PATH,
+                selected_metadata.geojson_dir
+            )
+            LOG_DEBUG(f"Selected GEOJSON dir: {geojson_dir}")
+            self.map_visualize.update_layers(geojson_dir, self.map_layer_visibility_table)
+            
