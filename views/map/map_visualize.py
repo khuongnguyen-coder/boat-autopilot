@@ -448,7 +448,7 @@ class MapVisualize(Gtk.DrawingArea):
         # If MapVisualize is added into multiple nested containers before it reaches MapView,
         # get_parent() will only return the immediate parent, not the MapView overlay itself.
 
-        LOG_DEBUG(f"info_str: {info_str}")
+        LOG_INFO(f"info_str: {info_str}")
         map_view = self.get_parent()
 
         # Create popup content
@@ -462,6 +462,9 @@ class MapVisualize(Gtk.DrawingArea):
         label = Gtk.Label(label=info_str)
         label.set_justify(Gtk.Justification.LEFT)
         label.get_style_context().add_class("popup-info-label")
+        label.set_xalign(0.0)   # 0.0 = left, 0.5 = center, 1.0 = right
+        label.set_yalign(0.0)   # vertical alignment
+        label.set_justify(Gtk.Justification.LEFT)   # LEFT, RIGHT, CENTER, FILL
 
         close_btn = Gtk.Button(label="Close")
         close_btn.connect("clicked", lambda btn: map_view.hide_common_popup())
@@ -514,7 +517,7 @@ class MapVisualize(Gtk.DrawingArea):
         self.map_state.my_ship_marker.set_location(self.map_state.gps_loc_lat, self.map_state.gps_loc_lon)
         self.map_state.my_ship_marker.set_heading(heading_deg)  # or 0 if no heading
         self.queue_draw()
-        LOG_DEBUG(f"GPS location updated to: ({lat:.6f}, {lon:.6f})")
+        LOG_INFO(f"GPS location updated to: ({lat:.6f}, {lon:.6f})")
     # ----------------------------------------------------------------------------------------
 
     # ----------------------------------------------------------------------------------------
@@ -756,7 +759,8 @@ class MapVisualize(Gtk.DrawingArea):
                         line_color=layer_info.get("line_color", (0, 0, 0)),
                         line_width=layer_info.get("width", 2),
                         fill_color=layer_info.get("fill_color"),
-                        fill_opacity=layer_info.get("fill_opacity", 0.3)
+                        fill_opacity=layer_info.get("fill_opacity", 0.3),
+                        line_style=layer_info.get("line_style", "solid") 
                     )
                     self.add_layer(layer_instance)
                     LOG_DEBUG(f"Added layer: {layer_name} with style {layer_info}")
@@ -780,7 +784,8 @@ class MapVisualize(Gtk.DrawingArea):
                             line_color=layer_info.get("line_color", (0, 0, 0)),
                             line_width=layer_info.get("width", 2),
                             fill_color=layer_info.get("fill_color"),
-                            fill_opacity=layer_info.get("fill_opacity", 0.3)
+                            fill_opacity=layer_info.get("fill_opacity", 0.3),
+                            line_style=layer_info.get("line_style", "solid") 
                         )
                         self.add_layer(layer_instance)
         else:
