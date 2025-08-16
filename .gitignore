@@ -6,5 +6,8 @@ __pycache__
 ui/.*.glade.bak
 ui/main.glade~
 
-ui/assets/tiles/*
+# Check leak memory log
+valgrind.log
 
+# Database
+database/ENC_VN_2023/
