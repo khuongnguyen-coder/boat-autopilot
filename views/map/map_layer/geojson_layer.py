@@ -11,7 +11,7 @@ Responsibilities:
 
 Dependencies:
     - Uses LINE_STYLE_PATTERNS from style_constants.py for predefined dash styles.
-    - Relies on map_obj.lonlat_to_pixels() for coordinate projection.
+    - Relies on map_obj.latlon_to_pixels() for coordinate projection.
 
 Author: Khuong Nguyen (ntkhuong.coder@gmail.com)
 """
@@ -154,7 +154,7 @@ class GeoJSONLayer:
     def _draw_linestring(self, ctx, coords, map_obj):
         """Draw a LineString or polygon ring path (without stroking/filling)."""
         for i, (lon, lat) in enumerate(coords):
-            x, y = map_obj.lonlat_to_pixels(lon, lat)
+            x, y = map_obj.latlon_to_pixels(lat, lon)
             if i == 0:
                 ctx.move_to(x, y)
             else:
@@ -206,7 +206,7 @@ class GeoJSONLayer:
 
     def _line_hit_test(self, coords, px, py, map_obj, tolerance):
         """Check if point (px, py) is near any line segment in coords."""
-        points = [map_obj.lonlat_to_pixels(lon, lat) for lon, lat in coords]
+        points = [map_obj.latlon_to_pixels(lat, lon) for lon, lat in coords]
         for (x1, y1), (x2, y2) in zip(points, points[1:]):
             if self._point_to_segment_dist(px, py, x1, y1, x2, y2) <= tolerance:
                 return True

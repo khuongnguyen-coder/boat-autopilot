@@ -23,6 +23,8 @@ Example LINE_STYLE_PATTERNS from style_constants.py:
     "solid":  []              → continuous solid line
     "dashed": [10.0, 5.0]     → 10px dash, 5px gap
     "dotted": [2.0, 4.0]      → 2px dot, 4px gap
+
+Author: Khuong Nguyen (ntkhuong.coder@gmail.com)
 """
 
 from views.map.map_layer.style_constants import LINE_STYLE_PATTERNS

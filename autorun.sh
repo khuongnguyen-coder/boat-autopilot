@@ -3,6 +3,7 @@
 # ------------------------------------------------------------------------------
 # VNEST Autopilot Launcher Script
 # Runs resource build steps and launches the main Python application.
+# Author: Khuong Nguyen (ntkhuong.coder@gmail.com)
 # ------------------------------------------------------------------------------
 
 set -e  # ⛔ Exit immediately if any command fails

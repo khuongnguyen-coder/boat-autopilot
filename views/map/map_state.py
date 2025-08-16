@@ -1,3 +1,27 @@
+"""
+map_state.py - Map state container for VNEST Autopilot.
+
+This module defines the `MapState` class, which encapsulates the current state of the
+map rendering system. It tracks the following:
+
+    - Map center (lat/lon) and GPS location.
+    - Ship marker (custom drawable object).
+    - Zoom range and current zoom level.
+    - Panning offsets and drag state.
+    - Tile rendering (cached Cairo surfaces).
+    - User interaction states (mouse clicks, dragging).
+    - Debug mode toggle for diagnostics.
+
+Usage:
+    from views.map.map_state import MapState
+
+    state = MapState(center_lat, center_lon, (min_zoom, max_zoom))
+    state.my_ship_marker.set_location(lat, lon)
+    state.curr_zoom = 10
+
+Author: Khuong Nguyen (ntkhuong.coder@gmail.com)
+"""
+
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
@@ -5,40 +29,72 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 from utils.path import utils_path_get_asset
 from views.map.map_marker.marker_ship import MapMarkerShip
 
-# map_state.py
+
 class MapState:
-    def __init__(self, _center_lat, _center_lot, _zoom_range):
+    """
+    Holds the current state of the map (center, zoom, tiles, interaction, ship marker).
 
+    Attributes:
+        center_loc_lat (float): Current map center latitude.
+        center_loc_lon (float): Current map center longitude.
+        gps_loc_lat (float): GPS latitude of the ship.
+        gps_loc_lon (float): GPS longitude of the ship.
+        my_ship_marker (MapMarkerShip): Custom ship marker object with heading and label.
+        zoom_range (tuple): (min_zoom, max_zoom) available levels.
+        curr_zoom (int): Current zoom level.
+        offset_x (int): Horizontal pan offset in pixels.
+        offset_y (int): Vertical pan offset in pixels.
+        tiles_dir_path (str|None): Path to tile storage directory.
+        tiles (dict): Map of {(x, y): Cairo surface} tile cache.
+        last_clicked_pos (tuple): Last mouse click position (x, y).
+        dragging (bool): True if drag operation is active.
+        drag_start_x (int): X coordinate where drag began.
+        drag_start_y (int): Y coordinate where drag began.
+        debug_mode (bool): Toggle for diagnostic overlays.
+    """
+
+    def __init__(self, _center_lat: float, _center_lon: float, _zoom_range: tuple):
+        """
+        Initialize a MapState instance.
+
+        Args:
+            _center_lat (float): Initial map center latitude.
+            _center_lon (float): Initial map center longitude.
+            _zoom_range (tuple): (min_zoom, max_zoom) zoom levels.
+        """
         # Current location (map center in lat/lon)
-        self.center_loc_lat = _center_lat       # float: Current latitude (map center)
-        self.center_loc_lon = _center_lot       # float: Current longitude (map center)
-        # self.center_loc_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(center_pixbuf_path, 24, 24)
+        self.center_loc_lat = _center_lat
+        self.center_loc_lon = _center_lon
 
-        self.gps_loc_lat = _center_lat                 # float: GPS latitude
-        self.gps_loc_lon = _center_lot                 # float: GPS longitude
-        # gps_pixbuf_path = utils_path_get_asset("map", "ship.png")
-        # self.gps_loc_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(gps_pixbuf_path, 24, 24)
-        # Create a ship marker
-        self.my_ship_marker = MapMarkerShip(image_path=utils_path_get_asset("map", "ship.png"), size=24)
+        # GPS location (start same as center)
+        self.gps_loc_lat = _center_lat
+        self.gps_loc_lon = _center_lon
+
+        # Ship marker setup
+        self.my_ship_marker = MapMarkerShip(
+            image_path=utils_path_get_asset("map", "ship.png"),
+            size=24
+        )
         self.my_ship_marker.set_location(self.gps_loc_lat, self.gps_loc_lon)
-        self.my_ship_marker.set_heading(0)  # North by default
+        self.my_ship_marker.set_heading(0)  # Default north
 
-        self.zoom_range = _zoom_range           # tuple: Zoom range level
-        self.curr_zoom = self.zoom_range[0]     # int: Zoom level default is min level        
+        # Zooming
+        self.zoom_range = _zoom_range
+        self.curr_zoom = self.zoom_range[0]  # Start with minimum zoom
 
-        # Offset for panning (in pixels)
-        self.offset_x = 0               # int
-        self.offset_y = 0               # int
+        # Panning offsets
+        self.offset_x = 0
+        self.offset_y = 0
 
-        # Tile rendering
-        self.tiles_dir_path = None      # str: Path to stored tiles
-        self.tiles = {}                 # dict: {(x, y): tile_surface}
+        # Tile rendering cache
+        self.tiles_dir_path = None
+        self.tiles = {}
 
         # Interaction state
-        self.last_clicked_pos = (0, 0)  # tuple: last mouse (x, y)
+        self.last_clicked_pos = (0, 0)
         self.dragging = False
         self.drag_start_x = 0
         self.drag_start_y = 0
 
-        # Debug options
+        # Debugging option
         self.debug_mode = False

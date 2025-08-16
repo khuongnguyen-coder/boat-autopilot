@@ -7,6 +7,8 @@ so they can be used consistently across all layers without creating circular imp
 
 Usage:
     from views.map.map_layer.style_constants import LINE_STYLE_PATTERNS
+
+Author: Khuong Nguyen (ntkhuong.coder@gmail.com)
 """
 
 # -----------------------------------------------------------------------------

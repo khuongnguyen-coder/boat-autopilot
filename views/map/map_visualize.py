@@ -1,3 +1,49 @@
+"""
+Map Visualize Widget
+====================
+
+A custom GTK3 widget for interactive map visualization using OpenStreetMap tiles.
+Provides panning, zooming, tile caching, dynamic GeoJSON layer rendering, and a ship marker with optional GPS simulation.
+
+Main Features
+-------------
+- Tile-based rendering with async downloading and caching.
+- Smooth pan and zoom interactions (mouse drag + scroll wheel).
+- Ship marker with heading, scale, and simulated drift.
+- Layer system with GeoJSON parsing, styling, and hit testing.
+- Popups on marker and feature clicks.
+- Signal emission (`view-changed`) for extent updates.
+
+Usage Example
+-------------
+```python
+from map_visualize import MapVisualize
+
+# Create widget
+map_widget = MapVisualize()
+
+# Add to a GTK container
+window.add(map_widget)
+
+# Center map
+map_widget.center_on(37.7749, -122.4194, zoom=12)  # San Francisco
+
+# Add a GeoJSON layer
+map_widget.add_layer("harbors", "/path/to/harbors.geojson")
+
+# Start simulation mode (optional)
+map_widget.start_simulate()
+```
+
+Notes
+-----
+- Requires PyGObject (GTK3).
+- Uses Cairo for rendering.
+- Respects OpenStreetMap tile usage policy; avoid excessive downloads.
+
+Author: Khuong Nguyen (ntkhuong.coder@gmail.com)
+"""
+
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
@@ -74,14 +120,17 @@ class MapVisualize(Gtk.DrawingArea):
 
         # self.set_size_request(800, 600)
 
-        self.map_state = MapState(MY_LOCATION_LON, MY_LOCATION_LAT, (6, 19))
+        self.map_state = MapState(MY_LOCATION_LAT, MY_LOCATION_LON, (6, 19))
 
-         # async tile loading state
+        # async tile loading state
         self.tiles_lock = threading.Lock()         # protects access to self.map_state.tiles
         self.loading_keys = set()                  # keys currently being loaded (avoid duplicate workers)
         self.empty_pixbuf = GdkPixbuf.Pixbuf.new_from_file(
             utils_path_get_asset("map", G_TILE_EMPTY)
         )
+
+        # TODO(perf): replace dict cache with a bounded LRU to prevent unbounded growth.
+        # Consider: collections.OrderedDict with max size, or functools.lru_cache around loader.
         
         LOG_DEBUG("MapVisualize init done")
     # ****************************************************************************************
@@ -89,7 +138,11 @@ class MapVisualize(Gtk.DrawingArea):
     # ****************************************************************************************
     # Override for queue_draw to add emit custom signal.
     def queue_draw(self, *args, **kwargs):
-        """Queue a redraw and emit view-changed."""
+        """
+	Queue a redraw and emit view-changed.
+        TODO: Emitting on every queue_draw may be noisy. If downstream listeners do heavy work,
+        consider throttling (e.g., coalescing with GLib.idle_add) or emitting only when view actually changes.
+        """
         super().queue_draw(*args, **kwargs)
         self.emit("view-changed")
     # ****************************************************************************************
@@ -97,7 +150,10 @@ class MapVisualize(Gtk.DrawingArea):
     # ****************************************************************************************
     # [LAYER HANDLER]
     def add_layer(self, layer):
-        """Add a new map layer and redraw."""
+        """
+	Add a new map layer and redraw.
+        TODO: de-dup if the same layer_id is added twice.
+        """
         self.layers.append(layer)
         self.queue_draw()
 
@@ -122,18 +178,19 @@ class MapVisualize(Gtk.DrawingArea):
         if event.button != 1:
             return False  # Ignore other buttons
 
-        # Exec hit test for all layer 
+        # Exec hit test for all layers
         for layer in self.layers:
             if hasattr(layer, "hit_test"):
                 feature = layer.hit_test(event.x, event.y, self)
                 if feature:
                     info_text = layer.properties_str(layer.get_properties(feature))
                     self.show_ship_info_popup(info_text)
-                    return
+                    return True
         
         # Exec hit test for marker
         if self.map_state.my_ship_marker.hit_test(event.x, event.y):
             self.show_ship_info_popup(self.map_state.my_ship_marker.get_info_str())
+            return True
         else:
             # Handle left-click: begin drag and register as click
             self.map_state.dragging = True
@@ -147,6 +204,7 @@ class MapVisualize(Gtk.DrawingArea):
         return True
 
     def on_scroll(self, widget, event):
+        # TODO(UX): zoom to mouse pointer position (adjust center so the mouse stays on the same geo coord)
         if event.direction == Gdk.ScrollDirection.SMOOTH:
             if event.delta_y < 0:
                 self.zoom_level_increase()
@@ -210,6 +268,11 @@ class MapVisualize(Gtk.DrawingArea):
     # [DRAW METHOD]
     def on_draw(self, widget, ctx):
         # LOG_DEBUG("on_draw called")
+
+        if self.map_state.tiles_dir_path is None:
+            LOG_ERR("Tiles dir was not set. Exit!")
+            return
+
         width = self.get_allocated_width()
         height = self.get_allocated_height()
         
@@ -298,7 +361,7 @@ class MapVisualize(Gtk.DrawingArea):
             cos_val = math.cos(lat_rad)
             log_val = math.log(tan_val + 1 / cos_val)
         except Exception as e:
-            LOG_ERR(f"deg2num math fail -> lat_rad: {lat_rad}, tan: {tan_val}, cos: {cos_val}, zoom: {zoom}")
+            LOG_ERR(f"deg2num math fail -> lat_rad: {lat_rad}, zoom: {zoom}, err: {e}")
             raise
 
         x_tile = (lon_deg + 180.0) / 360.0 * n
@@ -312,8 +375,10 @@ class MapVisualize(Gtk.DrawingArea):
         lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * ytile / n)))
         return math.degrees(lat_rad), lon_deg
 
-    def lonlat_to_pixels(self, lon, lat):
-        """Convert lon/lat to pixel coordinates relative to the widget."""
+    def latlon_to_pixels(self, lat, lon):
+        """
+	Convert lon/lat to pixel coordinates relative to the widget.
+        """
         width = self.get_allocated_width()
         height = self.get_allocated_height()
 
@@ -331,8 +396,8 @@ class MapVisualize(Gtk.DrawingArea):
         dx_tiles = tile_x - center_x
         dy_tiles = tile_y - center_y
 
-        px = width / 2 + dx_tiles * 256 + self.map_state.offset_x
-        py = height / 2 + dy_tiles * 256 + self.map_state.offset_y
+        px = width / 2 + dx_tiles * TILE_SIZE + self.map_state.offset_x
+        py = height / 2 + dy_tiles * TILE_SIZE + self.map_state.offset_y
 
         return px, py
 
@@ -353,7 +418,6 @@ class MapVisualize(Gtk.DrawingArea):
             tile_path = utils_path_get_asset("tiles", G_TILE_EMPTY)
             LOG_DEBUG(f"[✗] tiles_dir_path not set, using empty tile: {tile_path}")
             return tile_path
-            # return None
 
         # LOG_DEBUG(f"Check tile path: {tile_path}")
 
@@ -367,18 +431,15 @@ class MapVisualize(Gtk.DrawingArea):
                 }
                 req = urllib.request.Request(url, headers=headers)
                 try:
-                    with urllib.request.urlopen(req) as response, open(tile_path, 'wb') as out_file:
+                    # Add a small timeout to avoid hangs
+                    with urllib.request.urlopen(req, timeout=10) as response, open(tile_path, 'wb') as out_file:
                         out_file.write(response.read())
                     LOG_DEBUG(f"[✓] Downloaded tile: {tile_path}")
                 except Exception as e:
                     LOG_ERR(f"[✗] Download error for tile {x},{y}: {e}")
                     return utils_path_get_asset("tiles", G_TILE_EMPTY)
-                    # return None
             else:
                 tile_path = utils_path_get_asset("tiles", G_TILE_EMPTY)
-                # tile_path = None
-                # LOG_DEBUG(f"[✗] Tile not found and downloading disabled. Using empty: {tile_path}")
-
 
         # LOG_DEBUG(f"tile_path: {tile_path}")
         return tile_path
@@ -447,7 +508,7 @@ class MapVisualize(Gtk.DrawingArea):
         """
         # If MapVisualize is added into multiple nested containers before it reaches MapView,
         # get_parent() will only return the immediate parent, not the MapView overlay itself.
-
+	# But I can make sure for that.
         LOG_INFO(f"info_str: {info_str}")
         map_view = self.get_parent()
 
@@ -467,7 +528,10 @@ class MapVisualize(Gtk.DrawingArea):
         label.set_justify(Gtk.Justification.LEFT)   # LEFT, RIGHT, CENTER, FILL
 
         close_btn = Gtk.Button(label="Close")
-        close_btn.connect("clicked", lambda btn: map_view.hide_common_popup())
+        if map_view is not None:
+            close_btn.connect("clicked", lambda btn: map_view.hide_common_popup())
+        else:
+            close_btn.connect("clicked", lambda btn: popup_content.destroy())
 
         popup_content.pack_start(label, False, False, 0)
         popup_content.pack_start(close_btn, False, False, 0)
@@ -475,6 +539,8 @@ class MapVisualize(Gtk.DrawingArea):
         # Use MapView's common popup system
         if map_view:
             map_view.show_common_popup(popup_content)
+        else:
+            LOG_WARN("No MapView with show_common_popup found in parents; popup content created but not shown.")
 
 
     # ****************************************************************************************
@@ -486,6 +552,7 @@ class MapVisualize(Gtk.DrawingArea):
     def curr_gps_location_force(self):
         """
         Center the map on the current GPS location.
+        TODO: Map triggers a reload of all tiles → needs improvement for performance in this case.
         """
         if self.map_state.gps_loc_lat is None or self.map_state.gps_loc_lon is None:
             LOG_WARN("[✗] No GPS location set — cannot go to my location.")
@@ -504,7 +571,8 @@ class MapVisualize(Gtk.DrawingArea):
 
     def curr_gps_location_update(self, lat, lon, heading_deg):
         """
-        Update the map view to center on the specified latitude and longitude.
+        Update the GPS/marker state (does NOT auto-center the map).
+        TIP: Call curr_gps_location_force() after this if you want to center.
         """
         if not isinstance(lat, (int, float)) or not isinstance(lon, (int, float)):
             LOG_WARN(f"Ignored invalid center location: lat={lat}, lon={lon}")
@@ -512,6 +580,7 @@ class MapVisualize(Gtk.DrawingArea):
 
         self.map_state.gps_loc_lat = lat
         self.map_state.gps_loc_lon = lon
+        # reset drag offsets so marker movement is clean, but do not change center here
         self.map_state.offset_x = 0
         self.map_state.offset_y = 0
         self.map_state.my_ship_marker.set_location(self.map_state.gps_loc_lat, self.map_state.gps_loc_lon)
@@ -524,8 +593,11 @@ class MapVisualize(Gtk.DrawingArea):
     # [API: Center location]
     def curr_center_location_get(self):
         """
-        Return current zoom level.
+        Return current center (lat, lon).
         """
+        if self.map_state.tiles_dir_path is None:
+            LOG_ERR("Tiles dir was not set. Exit!")
+            return (None, None)  # return tuple, not set
         return self.map_state.center_loc_lat, self.map_state.center_loc_lon
     # ----------------------------------------------------------------------------------------
 
@@ -534,6 +606,7 @@ class MapVisualize(Gtk.DrawingArea):
     def curr_gps_location_sim_start(self, interval_ms=1000):
         """
         Start a simulated GPS updater that moves within map bounds and changes heading.
+        TODO: make bounds configurable; allow pausing; ensure it always runs on main loop.
         """
         self._simulator_running = True
         self._simulated_lat = self.map_state.gps_loc_lat
@@ -592,7 +665,7 @@ class MapVisualize(Gtk.DrawingArea):
     # ----------------------------------------------------------------------------------------
 
     # ----------------------------------------------------------------------------------------
-    # [API: Entent]
+    # [API: Extent]
     def update_extent(self, tile_base_path=None, center_lat=None, center_lon=None, zoom_range=None):
         """
         Update the map's extent, tile source, and zoom level — only if all parameters are valid.
@@ -670,6 +743,7 @@ class MapVisualize(Gtk.DrawingArea):
             if center_lat is not None and center_lon is not None:
                 self.map_state.center_loc_lat = center_lat
                 self.map_state.center_loc_lon = center_lon
+                # Keep GPS in sync with center if desired; if not, remove these two lines.
                 self.map_state.gps_loc_lat = center_lat
                 self.map_state.gps_loc_lon = center_lon
             if parsed_zoom_range:
@@ -684,6 +758,7 @@ class MapVisualize(Gtk.DrawingArea):
             LOG_DEBUG("[✓] update_extent applied")
 
             # Start simulation for gps update with heading change also.
+            # TODO: expose a flag parameter to control this behavior.
             self.curr_gps_location_sim_start()
         else:
             LOG_WARN("[✗] update_extent aborted due to invalid parameters")
@@ -773,7 +848,6 @@ class MapVisualize(Gtk.DrawingArea):
 
         if visible:
             if not existing_layer:
-                from views.map.map_layer.layer_factory import LAYER_CLASS_MAP
                 if layer_name in LAYER_CLASS_MAP:
                     layer_info = LAYER_CLASS_MAP[layer_name]
                     layer_class = layer_info["class"]
@@ -798,4 +872,3 @@ class MapVisualize(Gtk.DrawingArea):
     # ----------------------------------------------------------------------------------------
 
     # ****************************************************************************************
-

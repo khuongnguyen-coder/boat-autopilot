@@ -1,92 +1,89 @@
 # 🛰️ VNEST Autopilot  
 **MIT License © 2025 VNEST — All rights reserved**
 
-This repository includes two core GTK3-based UI components for a boat autopilot system:
-
-- ** MapView** — a `Gtk.DrawingArea` widget for OpenStreetMap tile rendering  
-- ** CameraView** — a `Gtk.DrawingArea` widget for live video streaming via OpenCV  
-
-Both are designed to be embedded into GTK3 applications and work together in a cohesive interface.
+This repository is a GTK3-based **autopilot UI system** for marine navigation,  
+combining **map visualization**, **camera streaming**, and **user authentication**.
 
 ---
 
-## MapView — OpenStreetMap Tile Viewer
+## 🌍 MapView — OpenStreetMap Tile Viewer
 
 A custom GTK3 widget to render and interact with map tiles from OpenStreetMap.  
-Supports smooth panning, automatic tile caching, and marker placement.
+Supports smooth panning, zooming, tile caching, and ship marker rendering.
 
 ### ✨ Features
+- Tile-based rendering using OpenStreetMap
+- Smooth panning with mouse drag
+- Zoom in/out controls with overlay buttons
+- GPS & ship marker support (`MapMarkerShip`)
+- Extent switching via `ExtentManager`
+- Layer visibility control (`MapLayerCheckboxTable`)
+- Tile caching with dynamic directory loading
+- Uses `Gtk.DrawingArea` for efficient redraws
 
-- Tile-based map rendering using OpenStreetMap
-- Mouse drag to pan
-- Click to drop a marker and log coordinates
-- Auto-downloads missing tiles to a local directory
-- Supports center marker and click marker
-- Uses `Gtk.DrawingArea` for high-performance redraw
+---
 
-### 📦 Dependencies
+## 🎥 CameraView — GTK3 + OpenCV Video Streamer
 
-#### System packages (Ubuntu/Debian):
-sudo apt install python3-gi gir1.2-gtk-3.0 libgdk-pixbuf2.0-dev
-
-#### Python packages:
-pip install numpy
-
-## CameraView — GTK3 + OpenCV Video Streamer
-
-A Gtk.DrawingArea widget that streams live video from the webcam using OpenCV,
-rendered with Cairo and Pixbuf with aspect-ratio scaling.
+A `Gtk.Box` + `Gtk.DrawingArea` widget that streams live video from a webcam using OpenCV,  
+rendered with Cairo/Pixbuf and aspect-ratio scaling.
 
 ### ✨ Features
-- Streams video using OpenCV
-- GTK3 layout using Gtk.Box and Gtk.DrawingArea
-- Resizes video with maintained aspect ratio
-- Supports pause/resume functionality
-- Designed for embedded integration in GTK apps
+- Streams video via OpenCV (`cv2.VideoCapture`)
+- Auto-refreshes via GLib timeout
+- Aspect ratio preserved with resize
+- Pause / resume / stop controls
+- Designed for embedding into main notebook tab
 
-### 📦 Dependencies
+---
 
-#### System packages (Ubuntu/Debian):
-sudo apt install -y python3-gi gir1.2-gtk-3.0 libgdk-pixbuf2.0-dev python3-opencv
+## 🔐 Authentication & User Management
+- Login dialog (`LoginDialog`) prompts for username & password
+- Users stored in `authentication/users.json`
+- Passwords are hashed with **bcrypt**
+- Configurable path resolution via `utils.path.utils_path_get_users`
+
+---
+
+## ⚙️ Core Components
+
+### 🗂️ **Extent Manager**
+- Loads ENC metadata (`*_metadata.json`) from `database/`
+- Provides extent selection for maps
+- Updates available layers + geojson data
+
+### 🧩 **Map Layers**
+- Layer visibility toggles managed by `MapLayerCheckboxTable`
+- Auto-detects new ENC layers not in known list
+- Supports persistence of enabled/disabled states
+
+### 🚢 **Ship Marker**
+- `MapMarkerShip` draws a rotatable ship icon
+- Displays ship name above marker
+- Hit detection for click interactions
+
+### 🧭 **Map State**
+- Manages zoom, center, offsets, tiles, ship marker
+- Handles dragging & interaction state
+- Keeps debug and overlay info
+
+---
+
+## 📦 Dependencies
+
+### System packages (Ubuntu/Debian):
+```sh
+sudo apt install -y \
+    python3-gi \
+    gir1.2-gtk-3.0 \
+    gir1.2-pango-1.0 \
+    libgdk-pixbuf2.0-dev \
+    python3-opencv \
+    python3-bcrypt
 
 #### Python packages:
-pip install opencv-python
+pip install numpy opencv-python
 
 # 📜 License
 MIT License
 © 2025 VNEST — All rights reserved.
-
-# 📁 Directory Layout
-<pre>
-    project_root
-        ├── app.py
-        ├── autorun.sh
-        ├── main.py
-        ├── README.md
-        ├── resources.gresource
-        ├── resources.xml
-        ├── scripts
-        │   ├── clear_pycache.sh
-        │   ├── normalize_paths.sh
-        │   └── update_resources.sh
-        ├── ui
-        │   ├── assets
-        │   │   ├── icons
-        │   │   │   └── *.png
-        │   │   ├── info
-        │   │   │   └── *.png
-        │   │   ├── map
-        │   │   │   └── *.png
-        │   │   └── tiles
-        │   │   │   └── *.png
-        │   ├── css
-        │   │   └── style.css
-        │   └── main.glade
-        ├── utils
-        │   ├── log.py
-        │   └── path.py
-        └── views
-            ├── camera_view.py
-            ├── main_view.py
-            └── map_view.py
-</pre>
