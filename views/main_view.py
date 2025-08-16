@@ -1,6 +1,6 @@
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk, Gio, GLib
 
 from views.map_view import MapView
 from views.camera_view import CameraView
@@ -8,6 +8,7 @@ from views.setting_view import SettingView
 
 from views.map.map_visualize import MapVisualize
 
+from utils.dialogs import utils_dialog_info_dialog 
 from utils.log import utils_log_get_logger
 LOG_INFO  = utils_log_get_logger("main_view")["info"]
 LOG_DEBUG = utils_log_get_logger("main_view")["debug"]
@@ -71,14 +72,14 @@ class MainView:
         else:
             LOG_ERR("[ERR] Could not find 'window_box_camera' in UI.")
 
-        # === Camera View Setup ===
+        # === Setting View Setup ===
         self.box_setting = builder.get_object("window_box_setting")
         if self.box_setting:
             self.box_setting.set_hexpand(True)
             self.box_setting.set_vexpand(True)
 
             LOG_DEBUG("Initializing SettingView ...")
-            self.setting_view = SettingView(builder, self.map_visualize)
+            self.setting_view = SettingView(builder, self)
             # self.setting_view.set_hexpand(True)
             # self.setting_view.set_vexpand(True)
 
@@ -91,10 +92,39 @@ class MainView:
         self.notebook.connect("switch-page", self.on_switch_page)
 
         # === Show main window ===
-        self.window.show_all()
         self.window.maximize()
+        self.window.show_all()
+
+        # Force notebook to last page + lock other tabs
+        GLib.idle_add(self._init_notebook_state)
+
+        # Show reminder dialog after window is visible
+        GLib.idle_add(lambda: utils_dialog_info_dialog(self.window, "Please, choose extent to continue .."))
+    
+    def _init_notebook_state(self):
+        total_pages = self.notebook.get_n_pages()
+        self._locked = True  # flag to track lock state
+        self._allowed_page = total_pages - 1
+
+        if self._allowed_page >= 0:
+            # Force last page as active
+            self.notebook.set_current_page(self._allowed_page)
+
+            # Gray out other tabs
+            for i in range(total_pages - 1):
+                tab_label = self.notebook.get_tab_label(self.notebook.get_nth_page(i))
+                if tab_label:
+                    tab_label.set_sensitive(False)
 
     def on_switch_page(self, notebook, page, page_num):
+        # Prevent switching if locked
+        if getattr(self, "_locked", False) and page_num != self._allowed_page:
+            LOG_DEBUG(f"Blocked tab switch → staying on {self._allowed_page}")
+            # Stop the "switch-page" signal here → GTK won't change page
+            notebook.emit_stop_by_name("switch-page")
+            return
+
+        # Camera start/stop logic
         page_widget = notebook.get_nth_page(page_num)
         if page_widget == self.box_camera:
             LOG_DEBUG("Camera tab active → Starting stream")
@@ -102,6 +132,15 @@ class MainView:
         else:
             LOG_DEBUG("Camera tab not active → Pausing stream")
             self.camera_view.pause()
+    
+    def unlock_tabs(self):
+        """Re-enable all locked tabs once user has chosen extent."""
+        self._locked = False
+        total_pages = self.notebook.get_n_pages()
+        for i in range(total_pages - 1):
+            tab_label = self.notebook.get_tab_label(self.notebook.get_nth_page(i))
+            if tab_label:
+                tab_label.set_sensitive(True)
 
     def on_destroy(self, *args):
         LOG_DEBUG("Shutting down MainView...")

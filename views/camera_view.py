@@ -53,22 +53,28 @@ class CameraView(Gtk.Box):
         LOG_INFO("Camera started.")
 
     def stop_camera(self):
-        self.running = False
-        if self.capture_thread and self.capture_thread.is_alive():
-            self.capture_thread.join(timeout=1.0)
-        if self.cap and self.cap.isOpened():
-            self.cap.release()
-            self.cap = None
-        LOG_INFO("[STOP] Camera thread stopped.")
+        if(self.running):
+            self.running = False
+            if self.capture_thread and self.capture_thread.is_alive():
+                self.capture_thread.join(timeout=1.0)
+            if self.cap and self.cap.isOpened():
+                self.cap.release()
+                self.cap = None
+            LOG_INFO("[STOP] Camera thread stopped.")
+        else:
+            LOG_INFO("[STOP] Camera was stopped already.")
 
     def pause(self):
-        LOG_INFO("[PAUSE] Pausing camera capture...")
-        self.stop_camera()
+        if(self.running):
+            LOG_INFO("[PAUSE] Pausing camera capture...")
+            self.stop_camera()
+        else:
+            LOG_INFO("[PAUSE] Camera was stopped already.")
 
     def resume(self):
         if self.running:
             return  # Already running
-        LOG_INFO("Resuming camera capture...")
+        LOG_INFO("[RESUME] Resuming camera capture...")
         self.start_camera()
 
     def capture_loop(self):

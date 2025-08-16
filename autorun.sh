@@ -11,30 +11,48 @@ set -e  # ⛔ Exit immediately if any command fails
 cd "$(dirname "$0")"
 
 # ------------------------------------------------------------------------------
+# Parse arguments
+# ------------------------------------------------------------------------------
+USE_VALGRIND=false
+for arg in "$@"; do
+    case $arg in
+        -v|--valgrind)
+            USE_VALGRIND=true
+            shift
+            ;;
+    esac
+done
+
+# ------------------------------------------------------------------------------
 # 🔧 Step 1: Normalize Glade Paths
-# This ensures the UI XML file has correct resource paths for GResource.
 # ------------------------------------------------------------------------------
 echo "📦 Step 1: Normalizing Glade paths..."
 ./scripts/normalize_paths.sh ui/main.glade
 
 # ------------------------------------------------------------------------------
 # 🛠️ Step 2: Update GResource
-# Compiles the resource XML into a .gresource binary file.
 # ------------------------------------------------------------------------------
 echo "📦 Step 2: Updating GResource..."
 ./scripts/update_resources.sh resources.xml
 
 # ------------------------------------------------------------------------------
 # 🧪 Step 3: Verify GResource Contents
-# Optional: list contents of the compiled resources.gresource file.
 # ------------------------------------------------------------------------------
 echo "📦 Step 3: Verifying resources..."
 gresource list resources.gresource
 echo ""
+
 # ------------------------------------------------------------------------------
 # 🚀 Step 4: Launch VNEST Autopilot App
-# Starts the GTK application via main.py.
 # ------------------------------------------------------------------------------
-echo "🚀 Step 4: Launching VNEST Autopilot..."
-python3 main.py
+if [ "$USE_VALGRIND" = true ]; then
+    echo "🚀 Step 4: Launching VNEST Autopilot under Valgrind..."
+    G_DEBUG=gc-friendly G_SLICE=always-malloc \
+    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+             --log-file=valgrind.log \
+             python3 main.py
+else
+    echo "🚀 Step 4: Launching VNEST Autopilot..."
+    python3 main.py
+fi
 echo ""

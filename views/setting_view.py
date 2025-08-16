@@ -18,14 +18,15 @@ from views.map.map_visualize import MapVisualize
 from views.map.map_layer_visibility import MapLayerCheckboxTable
 
 class SettingView():
-    def __init__(self, _builder, _map_visualize):
+    def __init__(self, _builder, _mainview):
         super().__init__()
 
         # ****************************************************************************************
         # [Extent Combobox]
         # Load elements from the builder using widget IDs
         self.map_extent_combobox = _builder.get_object("setting_map_extent_combobox")
-        self.map_visualize = _map_visualize
+        self.main_view = _mainview
+        self.map_visualize = _mainview.map_visualize
         self.map_extent_manager = ExtentManager()
 
         location_list = self.map_extent_manager.extent_get_location_list()
@@ -55,7 +56,9 @@ class SettingView():
         self.map_extent_combobox.add_attribute(renderer, "text", 0)  # show column 0
 
         # Optional: select first item
-        self.map_extent_combobox.set_active(0)
+        # self.map_extent_combobox.set_active(0)
+        # Set no default selection (empty)
+        self.map_extent_combobox.set_active(-1)
 
         # Connect signal
         self.map_extent_combobox.connect("changed", self.on_extent_changed)
@@ -91,4 +94,7 @@ class SettingView():
             )
             LOG_DEBUG(f"Selected GEOJSON dir: {geojson_dir}")
             self.map_visualize.layers_update(geojson_dir, self.map_layer_visibility_table)
+
+            # Unlock all tag of main's notebook
+            self.main_view.unlock_tabs()
             
