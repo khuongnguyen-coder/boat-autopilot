@@ -843,11 +843,11 @@ class MapVisualize(Gtk.DrawingArea):
                     LOG_WARN(f"GeoJSON file not found for {layer_name}: {geojson_file}")
 
     def layers_visibility_toggle(self, layer_name, visible):
-        """Show or hide a layer by name."""
-        existing_layer = next((l for l in self.layers if getattr(l, "layer_id", None) == layer_name), None)
+        """Show or hide a layer by name (handles multi-polygons)."""
+        matching_layers = [l for l in self.layers if getattr(l, "layer_id", None) == layer_name]
 
         if visible:
-            if not existing_layer:
+            if not matching_layers:  # Only load if not already loaded
                 if layer_name in LAYER_CLASS_MAP:
                     layer_info = LAYER_CLASS_MAP[layer_name]
                     layer_class = layer_info["class"]
@@ -859,16 +859,16 @@ class MapVisualize(Gtk.DrawingArea):
                             line_width=layer_info.get("width", 2),
                             fill_color=layer_info.get("fill_color"),
                             fill_opacity=layer_info.get("fill_opacity", 0.3),
-                            line_style=layer_info.get("line_style", "solid") 
+                            line_style=layer_info.get("line_style", "solid"),
+                            layer_id=layer_name,  # Make sure every feature has same id
                         )
                         self.add_layer(layer_instance)
         else:
-            if existing_layer:
-                self.remove_layer(existing_layer)
+            # Remove ALL layers with this id (multi-polygons case)
+            for l in matching_layers:
+                self.remove_layer(l)
 
         self.queue_draw()
-
-
     # ----------------------------------------------------------------------------------------
 
     # ****************************************************************************************

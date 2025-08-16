@@ -31,7 +31,8 @@ class AIRARELayer(GeoJSONLayer):
         line_width=1,
         fill_color=(1.0, 0.8, 0.8),
         fill_opacity=0.3,
-        line_style=None
+        line_style=None,
+        layer_id="AIRARE"
     ):
         """
         Initialize an AIRARE (Airspace Areas) layer.
@@ -43,6 +44,7 @@ class AIRARELayer(GeoJSONLayer):
             fill_color (tuple): Fill color as RGB (0-1), default light blue.
             fill_opacity (float): Fill transparency (0.0 = transparent, 1.0 = opaque).
             line_style (list, optional): Cairo dash pattern (from LINE_STYLE_PATTERNS). Defaults to solid line if None.
+            layer_id: Unique ENC identifier, default AIRARE
         """
         super().__init__(
             filepath=filepath,
@@ -52,7 +54,7 @@ class AIRARELayer(GeoJSONLayer):
             fill_color=fill_color,        # Polygon fill color
             fill_opacity=fill_opacity,    # Fill transparency
             line_style=line_style,        # Pass None → solid, or custom pattern
-            layer_id="AIRARE"             # Unique ENC identifier
+            layer_id=layer_id             # Unique ENC identifier
         )
 
     # =========================================================================
